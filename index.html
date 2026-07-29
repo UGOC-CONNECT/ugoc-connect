@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://www.google.com https://www.gstatic.com/recaptcha/; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.googleapis.com https://*.google.com https://firestore.googleapis.com https://identitytoolkit.googleapis.com wss://*.firebaseio.com; frame-src https://www.google.com; object-src 'none'; base-uri 'self';"/>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://www.google.com https://www.gstatic.com/recaptcha/ https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.googleapis.com https://*.google.com https://firestore.googleapis.com https://identitytoolkit.googleapis.com wss://*.firebaseio.com; frame-src https://www.google.com; object-src 'none'; base-uri 'self';"/>
   <title>UGOC CONNECT — Conseil des étudiants de UGOCC</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <style>
@@ -533,6 +533,10 @@
         <div class="login-field-wrap"><input type="text" id="inscCIN" placeholder="Ex: CIN-HT-XXXXXX"/></div>
       </div>
       <div class="login-field">
+        <label>Groupe sanguin (optionnel)</label>
+        <div class="login-field-wrap"><input type="text" id="inscGroupeSanguin" placeholder="Ex: O+, A-, AB+..."/></div>
+      </div>
+      <div class="login-field">
         <label>Adresse complète *</label>
         <div class="login-field-wrap"><input type="text" id="inscAdresse" placeholder="Ville, Département"/></div>
       </div>
@@ -731,13 +735,6 @@
     </div>
   </header>
 
-  <!-- Bandeau de rappel de vérification d'email (non bloquant) -->
-  <div id="verifyEmailBanner" style="display:none;background:#fff8e6;border-bottom:1px solid #f5d78e;padding:10px 40px;font-size:13px;color:#7a5b00;text-align:center;">
-    📧 Vérifiez votre adresse email — un lien de confirmation vous a été envoyé.
-    <a href="#" onclick="resendVerificationEmail();return false;" style="color:#F5A623;font-weight:600;text-decoration:underline;">Renvoyer l'email</a>
-    <span onclick="document.getElementById('verifyEmailBanner').style.display='none'" style="cursor:pointer;margin-left:14px;color:#9a8a6a;">✕</span>
-  </div>
-
   <!-- VUE: LISTE ADMIN -->
   <div id="adminView" style="display:none">
 
@@ -855,6 +852,7 @@
         <option value="danger">🔴 Reprendre le cours</option>
       </select>
       <button class="add-btn" onclick="openAddStudentModal()">+ Ajouter un étudiant</button>
+      <button class="add-btn" style="background:#3da86d;margin-left:8px;" onclick="openPromotionModal()">🎓 Promotion</button>
       <button class="add-btn" style="background:#3a7bd5;margin-left:8px;" onclick="exportAllData()">📥 Exporter (backup)</button>
     </div>
     <div class="results-info">Affichage de <strong id="showCount">0</strong> étudiant(s)</div>
@@ -914,6 +912,49 @@
       <div style="display:flex;gap:12px;margin-top:22px;">
         <button onclick="closeAddStudentModal()" style="flex:1;padding:12px;background:var(--creme);border:none;border-radius:12px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:14px;cursor:pointer;color:var(--gris);">Annuler</button>
         <button onclick="submitNewStudent()" style="flex:1;padding:12px;background:var(--rouge);color:white;border:none;border-radius:12px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:14px;cursor:pointer;">Ajouter l'étudiant</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: PROMOTION EN MASSE -->
+  <div id="promotionOverlay" style="display:none;position:fixed;inset:0;background:rgba(61,168,109,0.35);backdrop-filter:blur(3px);z-index:400;align-items:center;justify-content:center;padding:20px;overflow-y:auto;">
+    <div style="background:white;border-radius:20px;padding:28px;width:100%;max-width:480px;box-shadow:0 24px 80px rgba(0,0,0,0.3);max-height:90vh;overflow-y:auto;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+        <h2 style="font-family:'Playfair Display',serif;font-size:19px;color:var(--texte);">🎓 Promotion d'année</h2>
+        <button onclick="closePromotionModal()" style="background:none;border:none;font-size:22px;color:var(--gris);cursor:pointer;line-height:1;">×</button>
+      </div>
+      <p style="font-size:12.5px;color:var(--gris);margin-bottom:18px;">Fait monter tous les étudiants d'une année vers l'année suivante, en un seul clic.</p>
+
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <div>
+          <label style="display:block;font-size:11px;color:var(--gris);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:5px;font-weight:600;">Faculté</label>
+          <select id="promoFaculte" onchange="updatePromotionPreview()" style="width:100%;padding:11px 14px;border:1.5px solid var(--rouge-bord);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;outline:none;background:white;">
+            <option value="">Toutes les facultés</option>
+            <option value="Génie Informatique">Génie Informatique</option>
+            <option value="Génie Électromécanique">Génie Électromécanique</option>
+            <option value="Génie Civil">Génie Civil</option>
+            <option value="Architecture">Architecture</option>
+            <option value="Agronomie">Agronomie</option>
+            <option value="Administration">Administration</option>
+          </select>
+        </div>
+        <div>
+          <label style="display:block;font-size:11px;color:var(--gris);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:5px;font-weight:600;">Promouvoir les étudiants de *</label>
+          <select id="promoAnnee" onchange="updatePromotionPreview()" style="width:100%;padding:11px 14px;border:1.5px solid var(--rouge-bord);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;outline:none;background:white;">
+            <option value="1">1ère année → 2ème année</option>
+            <option value="2">2ème année → 3ème année</option>
+            <option value="3">3ème année → 4ème année</option>
+            <option value="4">4ème année → 5ème année</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="promoCount" style="background:#f0faf5;border:1px solid #cdeedd;color:#256b48;border-radius:10px;padding:10px 14px;font-size:13px;margin-top:16px;font-weight:600;"></div>
+      <div id="promoError" style="display:none;background:#fff0f0;border:1px solid #ffcccc;color:var(--rouge-vif);border-radius:10px;padding:10px 14px;font-size:13px;margin-top:10px;"></div>
+
+      <div style="display:flex;gap:12px;margin-top:22px;">
+        <button onclick="closePromotionModal()" style="flex:1;padding:12px;background:var(--creme);border:none;border-radius:12px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:14px;cursor:pointer;color:var(--gris);">Annuler</button>
+        <button onclick="promoteStudents()" style="flex:1;padding:12px;background:#3da86d;color:white;border:none;border-radius:12px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:14px;cursor:pointer;">Promouvoir</button>
       </div>
     </div>
   </div>
@@ -1040,22 +1081,6 @@ function firebaseErrorMessage(code){
     default: return 'Erreur lors de la création du compte' + (code ? ' (' + code + ')' : '') + '. Réessayez.';
   }
 }
-async function resendVerificationEmail(){
-  try {
-    if(auth.currentUser){
-      await auth.currentUser.sendEmailVerification();
-      showToast('📧 Email de vérification renvoyé !');
-    }
-  } catch(e){
-    console.warn('resendVerificationEmail:', e.code);
-    if(e.code === 'auth/too-many-requests'){
-      showToast('⏳ Trop de tentatives. Réessayez dans quelques minutes.');
-    } else {
-      showToast('❌ Erreur lors de l\'envoi. Réessayez plus tard.');
-    }
-  }
-}
-
 async function firebaseLogout(){ await auth.signOut(); }
 
 // ── Helpers Firestore ──
@@ -1264,27 +1289,77 @@ const coursDefault = [
 // Génère une variation stable (toujours la même) à partir d'un texte,
 // pour que le "Statut académique" et le tableau "Matières" affichent
 // toujours les mêmes notes par défaut pour un même cours.
-function stableVariation(text, range){
-  let hash = 0;
-  for(let i=0; i<text.length; i++){
-    hash = (hash * 31 + text.charCodeAt(i)) | 0;
+// ── Corrections de curriculum décidées par l'admin (cours renommé, code
+// changé, ou cours devenu indisponible/supprimé du programme). Un seul
+// document Firestore partagé : settings/curriculumOverrides, forme :
+//   { [faculte]: { [ancienCode]: { code, nom, removed } } }
+let curriculumOverrides = {};
+
+async function loadCurriculumOverrides(){
+  try {
+    const doc = await db.collection('settings').doc('curriculumOverrides').get();
+    curriculumOverrides = doc.exists ? (doc.data().parFaculte || {}) : {};
+  } catch(e){
+    console.warn('⚠️ loadCurriculumOverrides:', e.code || e.message);
+    curriculumOverrides = {};
   }
-  return (Math.abs(hash) % (range*2+1)) - range;
+}
+
+// Sauvegarder une correction (édition ou suppression) pour un cours donné
+// d'une faculté. Admin seulement (voir Firestore Rules).
+async function saveCurriculumOverride(faculte, origCode, patch){
+  if(!curriculumOverrides[faculte]) curriculumOverrides[faculte] = {};
+  var previous = curriculumOverrides[faculte][origCode];
+  curriculumOverrides[faculte][origCode] = Object.assign({}, previous, patch);
+  try {
+    await db.collection('settings').doc('curriculumOverrides').set({ parFaculte: curriculumOverrides }, { merge: true });
+    return true;
+  } catch(e){
+    // La sauvegarde a échoué (ex: permission-denied) — on annule le
+    // changement en mémoire pour ne pas laisser l'écran afficher quelque
+    // chose qui n'a en réalité jamais été sauvegardé dans Firestore.
+    if(previous === undefined) delete curriculumOverrides[faculte][origCode];
+    else curriculumOverrides[faculte][origCode] = previous;
+    console.error('❌ saveCurriculumOverride:', e.code || e.message);
+    showToast(e.code === 'permission-denied'
+      ? '❌ Sauvegarde refusée par Firestore — la règle pour la collection "settings" n\'a probablement pas encore été ajoutée.'
+      : '❌ Échec de la sauvegarde : ' + (e.message || e.code));
+    return false;
+  }
+}
+
+function applyCurriculumOverrides(cours, faculte){
+  const ov = curriculumOverrides[faculte];
+  if(!ov) return cours;
+  return cours
+    .filter(c => !(ov[c.code] && ov[c.code].removed))
+    .map(c => (ov[c.code] && !ov[c.code].removed)
+      ? Object.assign({}, c, { code: ov[c.code].code || c.code, nom: ov[c.code].nom || c.nom, origCode: c.code })
+      : c);
 }
 
 function getCours(faculte, semNum, noteBase, studentId){
   const liste = coursParFaculte[faculte] || coursDefault;
   const idx = Math.max(0, Math.min(semNum - 1, liste.length - 1));
   const cours = liste[idx] || liste[0];
-  return cours.map((c, i) => {
-    // Varier les notes autour de noteBase — de façon STABLE (même résultat
-    // à chaque appel pour un même étudiant + cours), pas aléatoire à chaque fois
-    const variation = stableVariation((studentId||'')+c.code, 10);
-    const note = i < cours.length - 1
-      ? Math.max(0, Math.min(100, noteBase + variation))
-      : 0; // Dernier cours = en cours
-    return { ...c, note };
-  });
+  // Toutes les notes démarrent à 0 ("pas encore noté") — seul l'admin,
+  // en entrant une note manuellement (customNotes), fait apparaître une
+  // vraie note. Aucune note fictive/aléatoire n'est générée.
+  const withNotes = cours.map((c) => ({ ...c, note: 0 }));
+  return applyCurriculumOverrides(withNotes, faculte);
+}
+
+// Toutes les matières d'une faculté, tous semestres confondus — utilisé pour
+// permettre à l'admin d'ajouter une matière hors du semestre actuel (ex: cours
+// pris en session avancée / rattrapage).
+function getAllCoursForFaculte(faculte){
+  const liste = coursParFaculte[faculte] || coursDefault;
+  const vus = {};
+  const flat = [];
+  liste.forEach(sem => sem.forEach(c => {
+    if(!vus[c.code]){ vus[c.code] = true; flat.push(c); }
+  }));
+  return flat;
 }
 
 function togglePassField(inputId, checkbox){
@@ -1405,6 +1480,7 @@ async function submitInscription(){
   const sexe         = get('inscSexe');
   const dob          = get('inscDob');
   const cin          = get('inscCIN');
+  const groupeSanguin = get('inscGroupeSanguin');
   const adresse      = get('inscAdresse');
   const tel          = get('inscTel');
   const email        = get('inscEmail').toLowerCase();
@@ -1456,7 +1532,7 @@ async function submitInscription(){
     id, prenom, nom, faculte, annee, note: 0, status: 'alert', email,
     photo: `https://i.pravatar.cc/150?img=${(nextNum % 70) + 1}`,
     customPhoto: inscPhotoData,
-    sexe, dob, cin, adresse, tel, dateInteg,
+    sexe, dob, cin, groupeSanguin, adresse, tel, dateInteg,
     contactUrgence: { nom: urgNom, lien: urgLien, tel: urgTel, adresse: urgAdresse },
     secretQuestion: question,
     secretAnswer: reponse.toLowerCase()
@@ -1472,7 +1548,7 @@ async function submitInscription(){
 
   // ── Sauvegarder dans Firestore — UNE SEULE écriture (= "create", autorisée pour l'étudiant)
   const firestorePayload = {
-    id, prenom, nom, faculte, annee, email, sexe, dob, cin, adresse, tel, dateInteg,
+    id, prenom, nom, faculte, annee, email, sexe, dob, cin, groupeSanguin, adresse, tel, dateInteg,
     contactUrgence: newStudent.contactUrgence,
     secretQuestion: question,
     secretAnswer: reponse.toLowerCase(),
@@ -1670,6 +1746,7 @@ async function doLogin(){
     student.secretQuestion = firestoreData.secretQuestion;
     student.secretAnswer   = firestoreData.secretAnswer;
     if(firestoreData.customNotes) student.customNotes = firestoreData.customNotes;
+    if(firestoreData.extraCourses) student.extraCourses = firestoreData.extraCourses;
     if(firestoreData.note !== undefined && firestoreData.note !== null) student.note = firestoreData.note;
     if(firestoreData.status) student.status = firestoreData.status;
     if(firestoreData.photo || firestoreData.photoURL) student.photo = firestoreData.photo || firestoreData.photoURL;
@@ -1685,11 +1762,10 @@ async function launchApp(){
   document.getElementById('headerEmail').textContent = currentUser.email;
   document.getElementById('headerRole').textContent  = currentUser.role === 'admin' ? 'Admin' : 'Étudiant';
 
-  // Rappel non bloquant si l'email n'est pas encore vérifié
-  const banner = document.getElementById('verifyEmailBanner');
-  if(banner){
-    banner.style.display = (auth.currentUser && !auth.currentUser.emailVerified) ? 'block' : 'none';
-  }
+  // Charger les corrections de curriculum (cours renommés/renumérotés ou
+  // rendus indisponibles par l'admin) — un seul document, lu une fois,
+  // partagé par tout le monde (admin ET étudiants, en lecture seule pour eux).
+  await loadCurriculumOverrides();
 
   // Synchroniser avec Firestore maintenant que l'utilisateur est authentifié.
   // IMPORTANT : un étudiant ne peut PAS faire une "list query" sur toute la
@@ -1917,6 +1993,62 @@ function closeAddStudentModal(){
   document.getElementById('addStudentOverlay').style.display = 'none';
 }
 
+// ── Promotion en masse d'une année vers la suivante ──
+function openPromotionModal(){
+  document.getElementById('promoFaculte').value = '';
+  document.getElementById('promoAnnee').value = '1';
+  document.getElementById('promoError').style.display = 'none';
+  updatePromotionPreview();
+  document.getElementById('promotionOverlay').style.display = 'flex';
+}
+
+function closePromotionModal(){
+  document.getElementById('promotionOverlay').style.display = 'none';
+}
+
+function updatePromotionPreview(){
+  var faculte = document.getElementById('promoFaculte').value;
+  var annee = parseInt(document.getElementById('promoAnnee').value);
+  var matches = students.filter(function(s){
+    return s.annee === annee && (!faculte || s.faculte === faculte);
+  });
+  document.getElementById('promoCount').textContent =
+    matches.length === 0
+      ? 'Aucun étudiant trouvé pour ce critère.'
+      : matches.length+' étudiant(s) seront promu(s) de '+annee+'ère/ème vers '+(annee+1)+'ère/ème année.';
+}
+
+async function promoteStudents(){
+  var faculte = document.getElementById('promoFaculte').value;
+  var annee = parseInt(document.getElementById('promoAnnee').value);
+  var errEl = document.getElementById('promoError');
+  errEl.style.display = 'none';
+
+  var matches = students.filter(function(s){
+    return s.annee === annee && (!faculte || s.faculte === faculte);
+  });
+
+  if(matches.length === 0){
+    errEl.textContent = '❌ Aucun étudiant ne correspond à ce critère.';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  if(!confirm('Confirmer la promotion de '+matches.length+' étudiant(s) vers '+(annee+1)+'ère/ème année ?')) return;
+
+  await Promise.all(matches.map(function(s){
+    s.annee = annee + 1;
+    return saveStudentData(s.id, { annee: s.annee });
+  }));
+
+  await logAdminAction('promotion_annee', (faculte||'Toutes facultés')+' — '+matches.length+' étudiant(s): '+annee+' → '+(annee+1));
+
+  closePromotionModal();
+  renderList();
+  updateDashboard();
+  showToast('🎓 '+matches.length+' étudiant(s) promu(s) en '+(annee+1)+'ère/ème année !');
+}
+
 // ── Journal des actions admin sensibles (accountability) ──
 async function logAdminAction(action, details){
   try {
@@ -2107,6 +2239,7 @@ function showProfile(s){
             ${field('Sexe','sexe',esc(s.sexe || '—'))}
             ${field('Date de naissance','dob',esc(s.dob || '—'))}
             ${field('CIN','cin',esc(s.cin || '—'))}
+            ${field('Groupe sanguin','groupeSanguin',esc(s.groupeSanguin || '—'))}
             ${field('Adresse','adresse',esc(s.adresse || '—'))}
             ${field('Date d\'intégration','dateInteg',esc(s.dateInteg || '—'))}
           </div>
@@ -2169,6 +2302,7 @@ async function saveProfile(id){
   if(get('sexe'))       s.sexe       = get('sexe');
   if(get('dob'))        s.dob        = get('dob');
   if(get('cin'))        s.cin        = get('cin');
+  if(get('groupeSanguin')) s.groupeSanguin = get('groupeSanguin');
   if(get('adresse'))    s.adresse    = get('adresse');
   if(get('dateInteg'))  s.dateInteg  = get('dateInteg');
 
@@ -2183,6 +2317,7 @@ async function saveProfile(id){
     id: s.id, prenom: s.prenom, nom: s.nom, email: s.email,
     faculte: s.faculte, annee: s.annee,
     tel: s.tel, sexe: s.sexe, dob: s.dob, cin: s.cin,
+    groupeSanguin: s.groupeSanguin,
     adresse: s.adresse, dateInteg: s.dateInteg,
     contactUrgence: s.contactUrgence
   });
@@ -2227,19 +2362,46 @@ function renderSubjects(s, editable){
     return s.customNotes[code] !== undefined ? s.customNotes[code] : defaultNote;
   }
 
-  function renderTable(cours, isEditable){
+  function renderTable(cours, isEditable, faculte){
+    var isAdmin = currentUser && currentUser.role === 'admin';
     var rows = cours.map(function(c){
-      var note = getNoteValue(c.code, c.note);
+      var noteKey = c.origCode || c.code; // clé stable pour les notes, même si le cours a été renommé
+      var note = getNoteValue(noteKey, c.note);
       var nc = note>=65?'good':note>=50?'mid':'low';
       var badge = note>=65?'passe':note>=50?'reprendre':note>0?'recompose':'encours';
       var label = note>=65?'Validé':note>=50?'Reprise':note>0?'Reprendre le cours':'En cours';
       var noteStr = note>0 ? note+'/100' : '—/100';
       var noteCell = isEditable
-        ? '<td><input type="number" min="0" max="100" value="'+(note>0?note:'')+'" placeholder="—" onchange="updateNote(\''+s.id+'\',\''+c.code+'\',this.value)" style="width:54px;padding:4px 6px;border:1.5px solid rgba(245,166,35,0.3);border-radius:6px;font-size:13px;font-family:DM Sans,sans-serif;outline:none;text-align:center;" onfocus="this.style.borderColor=\'#F5A623\'" onblur="this.style.borderColor=\'rgba(245,166,35,0.3)\'"/></td>'
+        ? '<td><input type="number" min="0" max="100" value="'+(note>0?note:'')+'" placeholder="—" onchange="updateNote(\''+s.id+'\',\''+noteKey+'\',this.value)" style="width:54px;padding:4px 6px;border:1.5px solid rgba(245,166,35,0.3);border-radius:6px;font-size:13px;font-family:DM Sans,sans-serif;outline:none;text-align:center;" onfocus="this.style.borderColor=\'#F5A623\'" onblur="this.style.borderColor=\'rgba(245,166,35,0.3)\'"/></td>'
         : '<td><span class="score '+nc+'" style="font-size:13px">'+noteStr+'</span></td>';
-      return '<tr><td style="font-size:11px;color:#9a8a8a">'+c.code+'</td><td style="font-size:13px">'+c.nom+'</td>'+noteCell+'<td><span class="badge '+badge+'">'+label+'</span></td></tr>';
+      var canRemoveExtra = c.isExtra && isEditable && isAdmin && !(note>0);
+      var removeBtn = canRemoveExtra ? ' <span onclick="removeExtraCourse(\''+s.id+'\',\''+c.code+'\')" title="Retirer cette matière" style="color:#e05252;cursor:pointer;font-size:12px;margin-left:6px;">✕</span>' : '';
+      var nomEsc = esc(c.nom).replace(/'/g,"\\'");
+      var editBtn = (!c.isExtra && isAdmin && faculte) ? ' <span onclick="openEditCourse(\''+s.id+'\',\''+faculte+'\',\''+noteKey+'\',\''+esc(c.code)+'\',\''+nomEsc+'\')" title="Modifier le code/nom de ce cours" style="cursor:pointer;font-size:11px;margin-left:6px;">✏️</span>' : '';
+      var unavailBtn = (!c.isExtra && isAdmin && faculte) ? ' <span onclick="markCourseUnavailable(\''+s.id+'\',\''+faculte+'\',\''+noteKey+'\',\''+nomEsc+'\')" title="Ce cours n\'est plus disponible" style="cursor:pointer;font-size:11px;margin-left:4px;color:#e05252;">🚫</span>' : '';
+      var nomCell = c.nom + (c.isExtra ? ' <span style="font-size:10px;color:#F5A623;font-weight:700;">(ajoutée)</span>' : '') + removeBtn + editBtn + unavailBtn;
+      return '<tr id="courseRow_'+s.id+'_'+noteKey+'"><td style="font-size:11px;color:#9a8a8a">'+c.code+'</td><td style="font-size:13px">'+nomCell+'</td>'+noteCell+'<td><span class="badge '+badge+'">'+label+'</span></td></tr>';
     }).join('');
     return '<table><thead><tr><th>Code</th><th>Matière</th><th>Note</th><th>Statut</th></tr></thead><tbody>'+rows+'</tbody></table>';
+  }
+
+  function buildAddCourseUI(){
+    if(!(currentUser && currentUser.role === 'admin')) return '';
+    var semActuel = s.annee*2;
+    var courants = getCours(s.faculte, semActuel, s.note, s.id).map(function(c){ return c.code; })
+      .concat((s.extraCourses||[]).map(function(c){ return c.code; }));
+    var options = getAllCoursForFaculte(s.faculte)
+      .filter(function(c){ return courants.indexOf(c.code) === -1; })
+      .map(function(c){ return '<option value="'+c.code+'">'+c.code+' — '+c.nom+'</option>'; })
+      .join('');
+    if(!options) return '';
+    return '<div style="margin-top:16px;padding-top:14px;border-top:1px dashed rgba(245,166,35,0.3);display:flex;gap:8px;align-items:center;flex-wrap:wrap;">'
+      +'<select id="addCourseSelect_'+s.id+'" style="flex:1;min-width:200px;padding:8px;border-radius:8px;border:1.5px solid rgba(245,166,35,0.3);font-family:\'DM Sans\',sans-serif;font-size:13px;">'
+      +'<option value="">＋ Ajouter une matière (session avancée, rattrapage...)</option>'
+      +options
+      +'</select>'
+      +'<button onclick="addExtraCourse(\''+s.id+'\')" style="padding:8px 14px;background:#F5A623;color:white;border:none;border-radius:8px;font-weight:700;font-size:13px;cursor:pointer;white-space:nowrap;">+ Ajouter</button>'
+      +'</div>';
   }
 
   function buildHistory(){
@@ -2271,7 +2433,9 @@ function renderSubjects(s, editable){
     +'</div>'
     +(isEditable ? '<p style="font-size:11px;color:#F5A623;margin-bottom:12px;">✏️ Cliquez sur une note pour la modifier</p>' : '')
     +'<div id="curTab"><p style="font-size:12px;color:#9a8a8a;margin-bottom:12px;">Semestre '+semActuel+' — Année '+s.annee+'</p>'
-    +renderTable(getCours(s.faculte, semActuel, s.note, s.id), isEditable)+'</div>'
+    +renderTable(getCours(s.faculte, semActuel, s.note, s.id).concat((s.extraCourses||[]).map(function(c){ return Object.assign({}, c, {note:0, isExtra:true}); })), isEditable, s.faculte)
+    +buildAddCourseUI()
+    +'</div>'
     +'<div id="hisTab" style="display:none">'+buildHistory()+'</div>';
 }
 
@@ -2315,6 +2479,104 @@ async function updateNote(studentId, courseCode, newValue){
 
   showToast('✅ Note enregistrée — ne peut plus être modifiée.');
   renderSubjects(s, true);
+}
+
+// ── Admin choisit une matière spécifique à ajouter pour un étudiant
+// (ex: cours pris en session avancée / rattrapage, hors du semestre normal)
+async function addExtraCourse(studentId){
+  var s = students.find(function(x){ return x.id === studentId; });
+  if(!s) return;
+
+  var sel = document.getElementById('addCourseSelect_'+studentId);
+  if(!sel || !sel.value){
+    showToast('⚠️ Choisissez une matière d\'abord.');
+    return;
+  }
+
+  var code = sel.value;
+  var course = getAllCoursForFaculte(s.faculte).find(function(c){ return c.code === code; });
+  if(!course) return;
+
+  if(!s.extraCourses) s.extraCourses = [];
+  if(s.extraCourses.some(function(c){ return c.code === code; })){
+    showToast('⚠️ Cette matière est déjà ajoutée.');
+    return;
+  }
+
+  s.extraCourses.push({ code: course.code, nom: course.nom });
+
+  await saveStudentData(s.id, { extraCourses: s.extraCourses });
+  await logAdminAction('matiere_ajoutee', `${s.prenom} ${s.nom} (${s.id}) — ${course.code}: ${course.nom}`);
+
+  showToast('✅ Matière ajoutée — vous pouvez maintenant entrer la note.');
+  renderSubjects(s, true);
+}
+
+// ── Admin retire une matière ajoutée par erreur (seulement si aucune note n'a été entrée)
+async function removeExtraCourse(studentId, courseCode){
+  var s = students.find(function(x){ return x.id === studentId; });
+  if(!s || !s.extraCourses) return;
+
+  if(s.customNotes && s.customNotes[courseCode] > 0){
+    showToast('⚠️ Impossible de retirer — une note a déjà été enregistrée pour cette matière.');
+    return;
+  }
+
+  var idx = s.extraCourses.findIndex(function(c){ return c.code === courseCode; });
+  if(idx < 0) return;
+  s.extraCourses.splice(idx, 1);
+
+  await saveStudentData(s.id, { extraCourses: s.extraCourses });
+  await logAdminAction('matiere_retiree', `${s.prenom} ${s.nom} (${s.id}) — ${courseCode}`);
+
+  showToast('🗑️ Matière retirée.');
+  renderSubjects(s, true);
+}
+
+// ── Admin modifie le code et/ou le nom d'un cours du programme de base
+// (ex: le code du ministère a changé, ou le nom officiel a été corrigé).
+// Le changement s'applique à TOUTE la faculté, pas seulement à cet étudiant —
+// les notes déjà enregistrées restent liées au cours via son code d'origine,
+// donc rien n'est perdu.
+async function openEditCourse(studentId, faculte, origCode, currentCode, currentNom){
+  var nom = prompt('Nom du cours :', currentNom);
+  if(nom === null) return; // annulé
+  nom = nom.trim();
+
+  var code = prompt('Code du cours :', currentCode);
+  if(code === null) return; // annulé
+  code = code.trim();
+
+  if(!nom || !code){
+    showToast('⚠️ Le nom et le code sont obligatoires.');
+    return;
+  }
+
+  var ok = await saveCurriculumOverride(faculte, origCode, { code: code, nom: nom, removed: false });
+  if(!ok) return; // le message d'erreur a déjà été affiché par saveCurriculumOverride
+
+  await logAdminAction('cours_modifie', `${faculte} — ${currentCode} → ${code} : ${nom}`);
+  showToast('✅ Cours mis à jour pour toute la faculté ' + faculte + '.');
+
+  var s = students.find(function(x){ return x.id === studentId; });
+  if(s) renderSubjects(s, true);
+}
+
+// ── Admin marque un cours du programme de base comme n'étant plus
+// disponible (ex: cours retiré du curriculum). Il disparaît de l'affichage
+// pour tous les étudiants de cette faculté, mais les notes déjà entrées
+// restent conservées dans Firestore (rien n'est supprimé, juste caché).
+async function markCourseUnavailable(studentId, faculte, origCode, nom){
+  if(!confirm('Rendre "' + nom + '" indisponible pour tous les étudiants de la faculté "' + faculte + '" ?\n\n(Les notes déjà enregistrées pour ce cours ne seront pas perdues.)')) return;
+
+  var ok = await saveCurriculumOverride(faculte, origCode, { removed: true });
+  if(!ok) return; // le message d'erreur a déjà été affiché par saveCurriculumOverride
+
+  await logAdminAction('cours_indisponible', `${faculte} — ${nom} rendu indisponible`);
+  showToast('✅ "' + nom + '" est maintenant indisponible pour la faculté ' + faculte + '.');
+
+  var s = students.find(function(x){ return x.id === studentId; });
+  if(s) renderSubjects(s, true);
 }
 
 function showToast(msg){
