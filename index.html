@@ -1,0 +1,2605 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://www.google.com https://www.gstatic.com/recaptcha/ https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.googleapis.com https://*.google.com https://firestore.googleapis.com https://identitytoolkit.googleapis.com wss://*.firebaseio.com; frame-src https://www.google.com; object-src 'none'; base-uri 'self';"/>
+  <title>UGOC CONNECT — Conseil des étudiants de UGOCC</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --rouge: #cc6600;
+      --rouge-vif: #F5A623;
+      --rouge-clair: #fff8ee;
+      --rouge-bord: rgba(245,166,35,0.25);
+      --blanc: #ffffff;
+      --creme: #fff8f0;
+      --gris: #9a8a8a;
+      --texte: #3d1f00;
+      --ombre: 0 4px 24px rgba(245,166,35,0.09);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--creme); color: var(--texte); min-height: 100vh; }
+
+    /* ══ PAGE LOGIN ══ */
+        /* ── NEW LOGIN DESIGN ── */
+    #loginPage {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #ffffff;
+      padding: 24px;
+    }
+    .login-box {
+      position: relative;
+      width: 100%;
+      max-width: 400px;
+      background: #ffffff;
+      border: 1px solid rgba(245,166,35,0.2);
+      padding: 44px 36px;
+      box-shadow: 0 8px 40px rgba(245,166,35,0.07), 0 2px 12px rgba(0,0,0,0.05);
+    }
+    .login-box::before {
+      content: '';
+      position: absolute;
+      top: -1px; left: -1px;
+      width: 24px; height: 24px;
+      border-top: 2px solid #F5A623;
+      border-left: 2px solid #F5A623;
+    }
+    .login-box::after {
+      content: '';
+      position: absolute;
+      bottom: -1px; right: -1px;
+      width: 24px; height: 24px;
+      border-bottom: 2px solid #F5A623;
+      border-right: 2px solid #F5A623;
+    }
+    .login-topbar {
+      position: absolute;
+      top: 0; left: 15%; right: 15%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #F5A623, transparent);
+      animation: loginPulse 2s ease-in-out infinite;
+    }
+    @keyframes loginPulse { 0%,100%{opacity:.4} 50%{opacity:1} }
+    @keyframes loginSpin { to{transform:rotate(360deg)} }
+    .login-logo-section { text-align: center; margin-bottom: 28px; }
+    .login-logo-wrap {
+      width: 110px; height: 110px;
+      margin: 0 auto 16px;
+      position: relative;
+    }
+    .login-logo-ring {
+      position: absolute; inset: 0;
+      border-radius: 50%;
+      border: 2px solid rgba(245,166,35,0.15);
+      border-top-color: #F5A623;
+      animation: loginSpin 3s linear infinite;
+    }
+    .login-logo-ring2 {
+      position: absolute; inset: 5px;
+      border-radius: 50%;
+      border: 1px dashed rgba(245,166,35,0.12);
+      animation: loginSpin 7s linear infinite reverse;
+    }
+    .login-logo-inner {
+      position: absolute; inset: 12px;
+      background: #fff;
+      border-radius: 50%;
+      border: 1.5px solid rgba(245,166,35,0.15);
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    .login-logo-inner img { width: 62px; height: 62px; object-fit: contain; }
+    .login-univ-abbr {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px; font-weight: 600;
+      color: #F5A623; letter-spacing: 5px;
+      text-transform: uppercase; margin-bottom: 4px;
+    }
+    .login-univ-name {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 13px; font-weight: 700;
+      color: #3d2000; letter-spacing: 0.5px;
+      line-height: 1.4; margin-bottom: 4px;
+    }
+    .login-univ-sub {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 10px; color: rgba(0,0,0,0.4);
+      letter-spacing: 2px; text-transform: uppercase;
+    }
+    .login-separator {
+      display: flex; align-items: center; gap: 10px;
+      margin: 22px 0;
+    }
+    .login-separator::before {
+      content: ''; flex: 1; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(245,166,35,0.3));
+    }
+    .login-separator::after {
+      content: ''; flex: 1; height: 1px;
+      background: linear-gradient(270deg, transparent, rgba(245,166,35,0.3));
+    }
+    .login-separator span {
+      font-size: 9px; color: #F5A623;
+      letter-spacing: 2.5px; text-transform: uppercase;
+      font-weight: 600; white-space: nowrap;
+    }
+    .login-field { margin-bottom: 18px; text-align: left; }
+    .login-field label {
+      display: block; font-size: 10px; color: #cc6600;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      margin-bottom: 8px; font-weight: 700;
+    }
+    .login-field input {
+      width: 100%; background: #fafafa;
+      border: 1px solid rgba(245,166,35,0.18); border-left: none;
+      color: #3d2000; padding: 12px 16px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px; outline: none; transition: all 0.2s;
+    }
+    .login-field input:focus {
+      border-color: rgba(245,166,35,0.45); background: #fff8f8;
+    }
+    .login-field input::placeholder { color: rgba(0,0,0,0.28); }
+    .login-field-wrap { position: relative; }
+    .login-field-wrap::before {
+      content: ''; position: absolute;
+      left: 0; top: 0; bottom: 0; width: 2px;
+      background: linear-gradient(180deg, #F5A623, rgba(245,166,35,0.1));
+    }
+    .show-pass-label {
+      display: flex; align-items: center; gap: 8px;
+      margin-top: 8px; cursor: pointer; width: fit-content;
+    }
+    .show-pass-label input[type="checkbox"] {
+      width: 14px; height: 14px;
+      accent-color: var(--rouge); cursor: pointer;
+    }
+    .show-pass-label span { font-size: 11px; color: rgba(0,0,0,0.4); }
+    .login-btn {
+      width: 100%; padding: 14px;
+      background: #F5A623; border: none; color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px; font-weight: 600;
+      letter-spacing: 3px; text-transform: uppercase;
+      cursor: pointer; margin-top: 6px;
+      position: relative; overflow: hidden; transition: all 0.3s;
+      box-shadow: 0 4px 20px rgba(245,166,35,0.28);
+    }
+    .login-btn:hover, .login-btn:active {
+      background: #F5A623;
+      box-shadow: 0 6px 28px rgba(245,166,35,0.38);
+    }
+    .login-error {
+      background: #fff0f0; border: 1px solid rgba(245,166,35,0.3);
+      color: #F5A623; border-radius: 6px;
+      padding: 10px 14px; font-size: 13px;
+      margin-top: 12px; display: none;
+    }
+    .login-error.show { display: block; }
+    .login-hint { display: none; }
+
+    /* ══ HEADER ══ */
+    header {
+      background: #F5A623;
+      height: 66px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 40px;
+      position: sticky; top: 0; z-index: 100;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.22);
+    }
+    .logo { display: flex; align-items: center; gap: 12px; }
+    .logo-icon { width: 38px; height: 38px; background: white; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 19px; }
+    .logo-text { font-family: 'Playfair Display', serif; color: white; font-size: 21px; font-weight: 700; letter-spacing: 1px; text-shadow: 0 1px 3px rgba(0,0,0,0.25); }
+    .logo-text span { color: #7a1010; }
+    .header-right { display: flex; align-items: center; gap: 14px; }
+    .user-chip {
+      background: rgba(255,255,255,0.15);
+      border-radius: 20px; padding: 6px 14px;
+      color: white; font-size: 13px; font-weight: 500;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .user-chip .role-badge {
+      background: white; color: var(--rouge);
+      border-radius: 10px; padding: 2px 8px;
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+    }
+    .logout-btn {
+      background: rgba(255,255,255,0.15); border: none;
+      color: white; padding: 8px 16px;
+      border-radius: 20px; font-family: 'DM Sans', sans-serif;
+      font-size: 13px; cursor: pointer;
+      transition: background 0.2s;
+    }
+    .logout-btn:hover { background: rgba(255,255,255,0.28); }
+
+    /* ══ HERO ══ */
+    .hero {
+      background: linear-gradient(135deg, #cc6600, #a00000);
+      padding: 32px 40px 28px;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 16px;
+    }
+    .hero-left h1 { font-family: 'Playfair Display', serif; color: white; font-size: 24px; margin-bottom: 4px; }
+    .hero-left p { color: rgba(255,255,255,0.65); font-size: 13px; }
+    .hero-stats { display: flex; gap: 16px; }
+    .hero-stat { text-align: center; background: rgba(255,255,255,0.12); border-radius: 14px; padding: 12px 20px; }
+    .hero-stat .val { font-size: 22px; font-weight: 700; color: white; }
+    .hero-stat .lbl { font-size: 10px; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+
+    /* ══ TOOLBAR ══ */
+    .toolbar {
+      max-width: 1140px; margin: 0 auto;
+      padding: 24px 24px 0;
+      display: flex; gap: 12px; flex-wrap: wrap; align-items: center;
+    }
+    .search-box {
+      flex: 1; min-width: 200px;
+      display: flex; align-items: center;
+      background: white; border: 1.5px solid var(--rouge-bord);
+      border-radius: 12px; padding: 0 14px;
+      box-shadow: var(--ombre);
+    }
+    .search-box span { color: var(--rouge-vif); font-size: 16px; margin-right: 8px; }
+    .search-box input { border: none; outline: none; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--texte); padding: 11px 0; width: 100%; background: transparent; }
+    .search-box input::placeholder { color: var(--gris); }
+    select { padding: 11px 14px; border: 1.5px solid var(--rouge-bord); border-radius: 12px; background: white; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--texte); cursor: pointer; outline: none; box-shadow: var(--ombre); }
+    select:focus { border-color: var(--rouge-vif); }
+    .add-btn { padding: 11px 20px; background: var(--rouge-vif); color: white; border: none; border-radius: 12px; font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 14px; cursor: pointer; transition: background 0.2s; white-space: nowrap; }
+    .add-btn:hover { background: #F5A623; }
+
+    .results-info { max-width: 1140px; margin: 14px auto 0; padding: 0 24px; font-size: 13px; color: var(--gris); }
+    .results-info strong { color: var(--rouge-vif); }
+
+    /* ══ GRID ══ */
+    .grid { max-width: 1140px; margin: 0 auto; padding: 18px 24px 48px; display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 18px; }
+    .card {
+      background: white; border-radius: 18px; padding: 22px 16px 18px;
+      box-shadow: var(--ombre); text-align: center; cursor: pointer;
+      position: relative; overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+      border: 1.5px solid transparent;
+      animation: fadeIn 0.3s ease both;
+    }
+    .card:hover { transform: translateY(-4px); box-shadow: 0 12px 36px rgba(245,166,35,0.15); border-color: var(--rouge-bord); }
+    .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 52px; background: linear-gradient(135deg, #cc6600, #c00000); }
+    .card-photo { position: relative; width: 70px; height: 70px; margin: 0 auto 10px; z-index: 1; }
+    .card-photo img { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 3px solid white; }
+    .status-dot { position: absolute; bottom: 2px; right: 2px; width: 14px; height: 14px; border-radius: 50%; border: 2px solid white; }
+    .status-dot.ok { background: #3da86d; } .status-dot.alert { background: #e8932a; } .status-dot.danger { background: #F5A623; }
+    .card-name { font-family: 'Playfair Display', serif; font-size: 14px; color: var(--texte); margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .card-id { font-size: 10px; color: var(--gris); margin-bottom: 8px; }
+    .card-faculty { display: inline-block; background: var(--rouge-clair); color: var(--rouge-vif); border: 1px solid var(--rouge-bord); border-radius: 20px; padding: 2px 10px; font-size: 10px; font-weight: 600; margin-bottom: 12px; }
+    .card-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+    .cstat { background: var(--creme); border-radius: 8px; padding: 6px; }
+    .cstat .cl { font-size: 9px; color: var(--gris); text-transform: uppercase; }
+    .cstat .cv { font-size: 13px; font-weight: 700; color: var(--texte); }
+    .cstat .cv.danger { color: var(--rouge-vif); } .cstat .cv.ok { color: #3da86d; }
+    .card-btn { display: block; width: 100%; margin-top: 12px; padding: 8px; background: #F5A623; color: white; border: none; border-radius: 9px; font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 12px; cursor: pointer; transition: background 0.2s; }
+    .card-btn:hover { background: var(--rouge-vif); }
+
+    .empty { grid-column: 1/-1; text-align: center; padding: 60px; color: var(--gris); }
+    .empty .icon { font-size: 48px; margin-bottom: 12px; }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ══ PROFILE ══ */
+    .container { max-width: 1100px; margin: 0 auto; padding: 32px 24px; }
+    .back-btn { background: none; border: none; color: var(--rouge-vif); font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; margin-bottom: 14px; display: flex; align-items: center; gap: 6px; padding: 0; }
+    .page-title { font-family: 'Playfair Display', serif; font-size: 24px; color: var(--texte); margin-bottom: 4px; }
+    .breadcrumb { font-size: 13px; color: var(--gris); margin-bottom: 24px; }
+    .breadcrumb span { color: var(--rouge-vif); font-weight: 600; }
+    .readonly-banner { background: #fff8e1; border: 1px solid #ffe082; border-radius: 10px; padding: 10px 16px; font-size: 13px; color: #7a5800; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+    .profile-grid { display: grid; grid-template-columns: 280px 1fr; gap: 22px; align-items: start; }
+    .profile-left, .profile-right { display: flex; flex-direction: column; gap: 16px; }
+    .photo-card { background: white; border-radius: 18px; padding: 24px 18px; box-shadow: var(--ombre); text-align: center; position: relative; overflow: hidden; }
+    .photo-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 64px; background: linear-gradient(135deg, #cc6600, #c00000); }
+    .photo-wrapper { position: relative; width: 90px; height: 90px; margin: 0 auto 10px; z-index: 1; }
+    .photo-wrapper img { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 3px solid white; }
+    .photo-badge { position: absolute; bottom: 2px; right: 2px; width: 20px; height: 20px; background: #3da86d; border-radius: 50%; border: 2px solid white; display: flex; align-items: center; justify-content: center; font-size: 9px; color: white; }
+    .student-name { font-family: 'Playfair Display', serif; font-size: 17px; color: var(--texte); margin-bottom: 3px; }
+    .student-id { font-size: 11px; color: var(--gris); margin-bottom: 10px; }
+    .faculty-tag { display: inline-block; background: var(--rouge-clair); color: var(--rouge-vif); border: 1px solid var(--rouge-bord); border-radius: 20px; padding: 3px 12px; font-size: 11px; font-weight: 600; margin-bottom: 14px; }
+    .profile-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; text-align: left; }
+    .stat-item { background: var(--creme); border-radius: 10px; padding: 8px 10px; }
+    .stat-label { font-size: 10px; color: var(--gris); text-transform: uppercase; letter-spacing: 0.4px; }
+    .stat-value { font-size: 15px; font-weight: 700; color: var(--texte); margin-top: 1px; }
+    .photo-upload-btn { display: block; width: 100%; margin-top: 12px; padding: 9px; background: #F5A623; color: white; border: none; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+    .photo-upload-btn:hover { background: var(--rouge-vif); }
+    .status-card { background: white; border-radius: 14px; padding: 16px; box-shadow: var(--ombre); }
+    .status-card h3 { font-size: 12px; font-weight: 700; color: var(--texte); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .status-item { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--creme); font-size: 13px; }
+    .status-item:last-child { border-bottom: none; }
+    .dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+    .dot.red { background: #F5A623; } .dot.green { background: #3da86d; } .dot.blue { background: #3a7bd5; } .dot.orange { background: #e8932a; }
+    .info-card, .subjects-card { background: white; border-radius: 18px; padding: 22px; box-shadow: var(--ombre); }
+    .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+    .card-title { font-family: 'Playfair Display', serif; font-size: 17px; color: var(--texte); }
+    .edit-btn { padding: 7px 16px; background: #F5A623; color: white; border: none; border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+    .edit-btn:hover { background: var(--rouge-vif); }
+    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .field { display: flex; flex-direction: column; gap: 4px; }
+    .field-label { font-size: 10px; color: var(--gris); text-transform: uppercase; letter-spacing: 0.5px; }
+    .field-value { font-size: 13px; font-weight: 500; color: var(--texte); background: var(--creme); border-radius: 8px; padding: 8px 12px; }
+    .field-value.email { color: #3a7bd5; }
+    .field-input { font-size: 13px; font-weight: 500; color: var(--texte); background: white; border: 1.5px solid var(--rouge-bord); border-radius: 8px; padding: 8px 12px; font-family: 'DM Sans', sans-serif; outline: none; width: 100%; }
+    .field-input:focus { border-color: var(--rouge-vif); }
+    table { width: 100%; border-collapse: collapse; }
+    thead tr { border-bottom: 2px solid var(--creme); }
+    th { text-align: left; font-size: 10px; font-weight: 700; color: var(--gris); text-transform: uppercase; letter-spacing: 0.4px; padding: 0 10px 10px; }
+    td { padding: 10px; font-size: 13px; border-bottom: 1px solid var(--creme); }
+    tr:last-child td { border-bottom: none; }
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+    .badge.recompose { background: rgba(245,166,35,0.1); color: #F5A623; }
+    .badge.rekommanse { background: rgba(232,147,42,0.1); color: #e8932a; }
+    .badge.passe { background: rgba(61,168,109,0.1); color: #3da86d; }
+    .badge.encours { background: rgba(58,123,213,0.1); color: #3a7bd5; }
+    .score { font-weight: 700; font-size: 14px; }
+    .score.low { color: #F5A623; } .score.mid { color: #e8932a; } .score.good { color: #3da86d; }
+    .email-card { background: linear-gradient(135deg, #cc6600, #5a0000); border-radius: 18px; padding: 20px 22px; box-shadow: var(--ombre); display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+    .email-info h3 { color: #ffaaaa; font-family: 'Playfair Display', serif; font-size: 15px; margin-bottom: 3px; }
+    .email-info p { color: rgba(255,255,255,0.6); font-size: 12px; }
+    .send-email-btn { background: white; color: #cc6600; border: none; padding: 10px 20px; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 13px; cursor: pointer; white-space: nowrap; transition: background 0.2s; }
+    .send-email-btn:hover { background: #ffd0d0; }
+    .save-btn { width: 100%; padding: 12px; background: #F5A623; color: white; border: none; border-radius: 12px; font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 14px; cursor: pointer; margin-top: 4px; transition: background 0.2s; }
+    .save-btn:hover { background: var(--rouge-vif); }
+
+    /* ══ TOAST ══ */
+    .toast { position: fixed; bottom: 28px; right: 28px; background: #3d1f00; color: white; padding: 12px 20px; border-radius: 12px; font-size: 13px; font-weight: 600; box-shadow: 0 8px 24px rgba(0,0,0,0.2); display: none; align-items: center; gap: 8px; z-index: 500; }
+    .toast.show { display: flex; }
+
+    @media (max-width: 768px) {
+      /* Header */
+      header { padding: 0 16px; height: 58px; }
+      .logo-text { font-size: 17px; }
+      .user-chip { font-size: 11px; padding: 5px 10px; max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .logout-btn { padding: 6px 10px; font-size: 12px; }
+
+      /* Hero */
+      .hero { padding: 18px 16px; flex-direction: column; gap: 14px; }
+      .hero-left h1 { font-size: 20px; }
+      .hero-stats { gap: 10px; width: 100%; justify-content: space-between; }
+      .hero-stat { padding: 10px 14px; flex: 1; }
+      .hero-stat .val { font-size: 18px; }
+
+      /* Toolbar */
+      .toolbar { padding: 12px 16px 0; flex-direction: column; gap: 10px; }
+      .search-box { width: 100%; }
+      .toolbar select { width: 100%; }
+      .add-btn { width: 100%; text-align: center; }
+
+      /* Grid étudiants */
+      .grid { padding: 12px 16px 40px; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+      .results-info { padding: 0 16px; }
+
+      /* Cards étudiants */
+      .card { padding: 18px 12px 14px; }
+      .card-photo { width: 60px; height: 60px; }
+      .card-photo img { width: 60px; height: 60px; }
+      .card-name { font-size: 13px; }
+
+      /* Profil */
+      .container { padding: 20px 16px; }
+      .profile-grid { grid-template-columns: 1fr; gap: 16px; }
+      .info-grid { grid-template-columns: 1fr; }
+      .page-title { font-size: 20px; }
+
+      /* Photo card */
+      .photo-card { padding: 20px 16px; }
+      .photo-wrapper { width: 80px; height: 80px; }
+      .photo-wrapper img { width: 80px; height: 80px; }
+      .profile-stats { grid-template-columns: 1fr 1fr; }
+
+      /* Info card */
+      .info-card, .subjects-card { padding: 18px 16px; }
+      .card-title { font-size: 15px; }
+
+      /* Email card */
+      .email-card { flex-direction: column; text-align: center; padding: 18px 16px; }
+      .send-email-btn { width: 100%; }
+
+      /* Modal ajouter étudiant */
+      #addStudentOverlay { padding: 12px; }
+      #addStudentOverlay > div { padding: 20px 16px; }
+
+      /* Dashboard stats cards */
+      .dash-stats-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+      .dash-charts-grid { grid-template-columns: 1fr !important; }
+
+      /* Tables */
+      table { font-size: 12px; }
+      th, td { padding: 8px 6px; }
+
+      /* Save btn */
+      .save-btn { padding: 10px; font-size: 13px; }
+
+      /* Back btn */
+      .back-btn { font-size: 13px; }
+    }
+
+    @media (max-width: 400px) {
+      .grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .hero-stat .val { font-size: 16px; }
+      .hero-stat .lbl { font-size: 9px; }
+      .card-stats { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-check-compat.js"></script>
+</head>
+<body>
+
+<!-- ══════════════════════════════════
+     PAGE LOGIN
+══════════════════════════════════ -->
+<div id="loginPage">
+  <div class="login-box">
+    <div class="login-topbar"></div>
+
+    <!-- Logo section -->
+    <div class="login-logo-section">
+      <div class="login-logo-wrap">
+        <div class="login-logo-ring"></div>
+        <div class="login-logo-ring2"></div>
+        <div class="login-logo-inner">
+          <img src="data:image/jpeg;base64,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" alt="UGOC CONNECT"/>
+        </div>
+      </div>
+      <div class="login-univ-abbr">UGOC CONNECT</div>
+      <div class="login-univ-name">Conseil des étudiants de UGOC</div>
+      <div class="login-univ-sub" id="loginSubtitle">Système de gestion</div>
+    </div>
+
+    <div class="login-separator"><span>Accès</span></div>
+
+    <!-- ÉTAPE 0: Choix connexion ou inscription -->
+    <div id="step0">
+      <button class="login-btn" onclick="showStep1()" style="margin-bottom:12px;">
+        🔑 Se connecter
+      </button>
+      <button class="login-btn" onclick="showFormulaire()" style="background:transparent;border:2px solid #F5A623;color:#cc6600;box-shadow:none;">
+        📝 Remplir le formulaire d'inscription
+      </button>
+    </div>
+
+    <!-- ÉTAPE 1: Email -->
+    <div id="step1" style="display:none">
+      <div class="login-field">
+        <label>Adresse email</label>
+        <div class="login-field-wrap">
+          <input type="email" id="loginEmail" placeholder="votre@email.com" onkeydown="if(event.key==='Enter') checkEmail()"/>
+        </div>
+      </div>
+      <button class="login-btn" onclick="checkEmail()">Continuer →</button>
+      <div class="login-error" id="loginError1">❌ Cet email n'est pas reconnu dans le système UGOC.</div>
+      <p style="font-size:12px;color:rgba(0,0,0,0.4);margin-top:14px;cursor:pointer;text-align:center;" onclick="showStep0()">← Retour</p>
+    </div>
+
+    <!-- FORMULAIRE INSCRIPTION -->
+    <div id="stepFormulaire" style="display:none">
+      <p style="font-size:11px;color:#cc6600;letter-spacing:1px;text-transform:uppercase;font-weight:700;margin-bottom:20px;text-align:center;">📋 Formulaire d'inscription</p>
+
+      <!-- Honeypot anti-bot : champ invisible pour les humains, que les bots
+           remplissent automatiquement. Si rempli, on rejette silencieusement. -->
+      <div style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;" aria-hidden="true">
+        <label for="inscWebsite">Ne pas remplir ce champ</label>
+        <input type="text" id="inscWebsite" name="website" tabindex="-1" autocomplete="off"/>
+      </div>
+
+      <!-- Informations personnelles -->
+      <div style="background:#fff8ee;border-left:3px solid #F5A623;padding:8px 12px;border-radius:0 6px 6px 0;margin-bottom:14px;">
+        <p style="font-size:10px;font-weight:700;color:#cc6600;letter-spacing:1px;text-transform:uppercase;margin:0;">Informations personnelles</p>
+      </div>
+
+      <div class="login-field">
+        <label>Nom *</label>
+        <div class="login-field-wrap"><input type="text" id="inscNom" placeholder="Nom de famille"/></div>
+      </div>
+      <div class="login-field">
+        <label>Prénom(s) *</label>
+        <div class="login-field-wrap"><input type="text" id="inscPrenom" placeholder="Tous vos prénoms"/></div>
+      </div>
+      <div class="login-field">
+        <label>Sexe *</label>
+        <select id="inscSexe" class="insc-select">
+          <option value="">— Sélectionnez —</option>
+          <option value="M">Masculin</option>
+          <option value="F">Féminin</option>
+        </select>
+      </div>
+      <div class="login-field">
+        <label>Date de naissance *</label>
+        <div class="login-field-wrap"><input type="date" id="inscDob"/></div>
+      </div>
+      <div class="login-field">
+        <label>Photo d'identité récente *</label>
+        <label for="inscPhoto" style="display:flex;align-items:center;gap:10px;padding:11px 14px;border:1px solid rgba(245,166,35,0.25);border-left:2px solid #F5A623;background:#fafafa;cursor:pointer;">
+          <span style="font-size:16px;">📷</span>
+          <span id="inscPhotoLabel" style="font-size:13px;color:rgba(0,0,0,0.3);">Choisir une photo...</span>
+        </label>
+        <input type="file" id="inscPhoto" accept="image/*" style="display:none" onchange="previewInscPhoto(event)"/>
+        <div id="inscPhotoPreview" style="display:none;margin-top:8px;text-align:center;">
+          <img id="inscPhotoImg" alt="Aperçu de la photo" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:2px solid #F5A623;"/>
+        </div>
+      </div>
+      <div class="login-field">
+        <label>Numéro d'identification nationale (optionnel)</label>
+        <div class="login-field-wrap"><input type="text" id="inscCIN" placeholder="Ex: CIN-HT-XXXXXX"/></div>
+      </div>
+      <div class="login-field">
+        <label>Groupe sanguin (optionnel)</label>
+        <div class="login-field-wrap"><input type="text" id="inscGroupeSanguin" placeholder="Ex: O+, A-, AB+..."/></div>
+      </div>
+      <div class="login-field">
+        <label>Adresse complète *</label>
+        <div class="login-field-wrap"><input type="text" id="inscAdresse" placeholder="Ville, Département"/></div>
+      </div>
+      <div class="login-field">
+        <label>Téléphone *</label>
+        <div class="login-field-wrap"><input type="tel" id="inscTel" placeholder="+509 ---- ----"/></div>
+      </div>
+      <div class="login-field">
+        <label>Adresse e-mail *</label>
+        <div class="login-field-wrap"><input type="email" id="inscEmail" placeholder="votre@email.com"/></div>
+      </div>
+      <div class="login-field">
+        <label>Code d'inscription UGOC *</label>
+        <div class="login-field-wrap"><input type="text" id="inscCode" placeholder="Fourni par l'administration"/></div>
+      </div>
+      <!-- Piège à robots (invisible pour un humain) — ne pas remplir -->
+      <div style="position:absolute;left:-9999px;" aria-hidden="true">
+        <input type="text" id="inscWebsite" name="website" tabindex="-1" autocomplete="off"/>
+      </div>
+
+      <!-- Informations académiques -->
+      <div style="background:#fff8ee;border-left:3px solid #F5A623;padding:8px 12px;border-radius:0 6px 6px 0;margin:18px 0 14px;">
+        <p style="font-size:10px;font-weight:700;color:#cc6600;letter-spacing:1px;text-transform:uppercase;margin:0;">Informations académiques</p>
+      </div>
+
+      <div class="login-field">
+        <label>Faculté / Filière *</label>
+        <select id="inscFaculte" class="insc-select" onchange="updateAnneeOptions()">
+          <option value="">— Sélectionnez —</option>
+          <option value="Génie Informatique">Génie Informatique</option>
+          <option value="Génie Électromécanique">Génie Électromécanique</option>
+          <option value="Génie Civil">Génie Civil</option>
+          <option value="Architecture">Architecture</option>
+          <option value="Agronomie">Agronomie</option>
+          <option value="Administration">Administration</option>
+        </select>
+      </div>
+      <div class="login-field">
+        <label>Année *</label>
+        <select id="inscAnnee" class="insc-select">
+          <option value="">Choisir la filière d'abord</option>
+        </select>
+      </div>
+      <div class="login-field">
+        <label>Date d'intégration *</label>
+        <div class="login-field-wrap"><input type="date" id="inscDateInteg"/></div>
+      </div>
+
+      <!-- Personne à contacter -->
+      <div style="background:#fff8ee;border-left:3px solid #F5A623;padding:8px 12px;border-radius:0 6px 6px 0;margin:18px 0 14px;">
+        <p style="font-size:10px;font-weight:700;color:#cc6600;letter-spacing:1px;text-transform:uppercase;margin:0;">Personne à contacter en cas d'urgence</p>
+      </div>
+
+      <div class="login-field">
+        <label>Nom et prénom *</label>
+        <div class="login-field-wrap"><input type="text" id="inscUrgNom" placeholder="Nom complet"/></div>
+      </div>
+      <div class="login-field">
+        <label>Lien de parenté *</label>
+        <select id="inscUrgLien" class="insc-select">
+          <option value="">— Sélectionnez —</option>
+          <option>Père</option><option>Mère</option><option>Frère</option>
+          <option>Sœur</option><option>Époux/Épouse</option><option>Tuteur</option><option>Autre</option>
+        </select>
+      </div>
+      <div class="login-field">
+        <label>Téléphone urgence *</label>
+        <div class="login-field-wrap"><input type="tel" id="inscUrgTel" placeholder="+509 ---- ----"/></div>
+      </div>
+      <div class="login-field">
+        <label>Adresse urgence</label>
+        <div class="login-field-wrap"><input type="text" id="inscUrgAdresse" placeholder="Adresse"/></div>
+      </div>
+
+      <!-- Sécurité compte -->
+      <div style="background:#fff8ee;border-left:3px solid #F5A623;padding:8px 12px;border-radius:0 6px 6px 0;margin:18px 0 14px;">
+        <p style="font-size:10px;font-weight:700;color:#cc6600;letter-spacing:1px;text-transform:uppercase;margin:0;">Sécurité du compte</p>
+      </div>
+
+      <div class="login-field">
+        <label>Mot de passe *</label>
+        <div class="pass-wrapper">
+          <input type="password" id="inscMdp" placeholder="Minimum 4 caractères"/>
+        </div>
+        <label class="show-pass-label">
+          <input type="checkbox" onchange="togglePassField('inscMdp', this)"/>
+          <span>Afficher le mot de passe</span>
+        </label>
+      </div>
+      <div class="login-field">
+        <label>Question secrète *</label>
+        <select id="inscQuestion" class="insc-select">
+          <option value="">— Choisissez —</option>
+          <option>Quel est le prénom de votre mère ?</option>
+          <option>Quel est le nom de votre premier animal ?</option>
+          <option>Dans quelle ville êtes-vous né(e) ?</option>
+          <option>Quel est le nom de votre école primaire ?</option>
+          <option>Quel est votre plat préféré ?</option>
+        </select>
+      </div>
+      <div class="login-field">
+        <label>Votre réponse *</label>
+        <div class="login-field-wrap"><input type="text" id="inscReponse" placeholder="Votre réponse secrète"/></div>
+      </div>
+
+      <div class="login-error" id="inscError" style="margin-bottom:12px;"></div>
+
+      <button class="login-btn" onclick="submitInscription()" style="margin-bottom:10px;">
+        ✅ Soumettre mon inscription
+      </button>
+      <p style="font-size:12px;color:rgba(0,0,0,0.4);cursor:pointer;text-align:center;margin-top:8px;" onclick="showStep0()">← Retour</p>
+    </div>
+
+
+    <!-- ÉTAPE 2a: Créer mot de passe (première fois) -->
+    <div id="step2create" style="display:none">
+      <div class="login-field">
+        <label>Bienvenue ! Créez votre mot de passe</label>
+        <div class="pass-wrapper">
+          <input type="password" id="newPassword" placeholder="Choisissez un mot de passe" onkeydown="if(event.key==='Enter') createPassword()"/>
+        </div>
+        <label class="show-pass-label">
+          <input type="checkbox" onchange="togglePassField('newPassword', this)"/>
+          <span>Afficher le mot de passe</span>
+        </label>
+      </div>
+      <div class="login-field">
+        <label>Confirmer le mot de passe</label>
+        <div class="pass-wrapper">
+          <input type="password" id="confirmPassword" placeholder="Répétez le mot de passe" onkeydown="if(event.key==='Enter') createPassword()"/>
+        </div>
+        <label class="show-pass-label">
+          <input type="checkbox" onchange="togglePassField('confirmPassword', this)"/>
+          <span>Afficher le mot de passe</span>
+        </label>
+      </div>
+      <div class="login-field">
+        <label>Question secrète</label>
+        <select id="secretQuestion" style="width:100%;padding:13px 16px;border:1.5px solid #e8d0d0;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--texte);outline:none;background:white;">
+          <option value="">— Choisissez une question —</option>
+          <option value="Quel est le prénom de votre mère ?">Quel est le prénom de votre mère ?</option>
+          <option value="Quel est le nom de votre premier animal de compagnie ?">Quel est le nom de votre premier animal de compagnie ?</option>
+          <option value="Dans quelle ville êtes-vous né(e) ?">Dans quelle ville êtes-vous né(e) ?</option>
+          <option value="Quel est le nom de votre école primaire ?">Quel est le nom de votre école primaire ?</option>
+          <option value="Quel est votre plat préféré ?">Quel est votre plat préféré ?</option>
+        </select>
+      </div>
+      <div class="login-field">
+        <label>Votre réponse</label>
+        <input type="text" id="secretAnswer" placeholder="Votre réponse" onkeydown="if(event.key==='Enter') createPassword()"/>
+      </div>
+      <button class="login-btn" onclick="createPassword()">Créer mon compte →</button>
+      <div class="login-error" id="loginError2">❌ Les mots de passe ne correspondent pas.</div>
+      <p style="font-size:12px;color:var(--gris);margin-top:12px;cursor:pointer" onclick="goBackStep1()">← Modifier l'adresse email</p>
+    </div>
+
+    <!-- ÉTAPE 2b: Entrer mot de passe (déjà inscrit) -->
+    <div id="step2login" style="display:none">
+      <div class="login-field">
+        <label>Mot de passe</label>
+        <div class="pass-wrapper">
+          <input type="password" id="loginPassword" placeholder="••••••••" onkeydown="if(event.key==='Enter') doLogin()"/>
+        </div>
+        <label class="show-pass-label">
+          <input type="checkbox" onchange="togglePassField('loginPassword', this)"/>
+          <span>Afficher le mot de passe</span>
+        </label>
+      </div>
+      <button class="login-btn" onclick="doLogin()">Se connecter →</button>
+      <div class="login-error" id="loginError3">❌ Mot de passe incorrect.</div>
+      <p style="font-size:12px;color:var(--rouge-vif);margin-top:14px;cursor:pointer;font-weight:600;" onclick="goToForgotPassword()">Mot de passe oublié ?</p>
+      <p style="font-size:12px;color:var(--gris);margin-top:8px;cursor:pointer" onclick="goBackStep1()">← Modifier l'adresse email</p>
+    </div>
+
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     APP (caché jusqu'au login)
+══════════════════════════════════ -->
+<div id="appPage" style="display:none">
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo">
+      <div class="logo-icon"><img src="data:image/jpeg;base64,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" alt="Logo UGOC CONNECT" style="width:34px;height:34px;object-fit:contain;border-radius:6px;"/></div>
+      <div class="logo-text">UGOC <span>CONNECT</span></div>
+    </div>
+    <div class="header-right">
+      <div class="user-chip">
+        <span id="headerEmail"></span>
+        <span class="role-badge" id="headerRole"></span>
+      </div>
+      <button class="logout-btn" id="logoutBtn" onclick="doLogout()">Déconnexion</button>
+    </div>
+  </header>
+
+  <!-- VUE: LISTE ADMIN -->
+  <div id="adminView" style="display:none">
+
+    <!-- Navigation onglets admin -->
+    <div style="background:var(--rouge);padding:0 24px;display:flex;gap:0;border-top:1px solid rgba(255,255,255,0.1);">
+      <button onclick="showAdminTab('dashboard')" id="tabDashboard" style="padding:14px 20px;background:rgba(255,255,255,0.15);border:none;color:white;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;border-bottom:2px solid white;">
+        📊 Dashboard
+      </button>
+      <button onclick="showAdminTab('liste')" id="tabListe" style="padding:14px 20px;background:none;border:none;color:rgba(255,255,255,0.6);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;">
+        👥 Étudiants
+      </button>
+    </div>
+
+    <!-- DASHBOARD VIEW -->
+    <div id="dashboardView">
+      <div class="hero">
+        <div class="hero-left">
+          <h1>Tableau de bord</h1>
+          <p>Vue d'ensemble — Année académique</p>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <select id="dashYearFilter" onchange="updateDashboard()" style="padding:10px 16px;border:1.5px solid rgba(255,255,255,0.3);border-radius:12px;background:rgba(255,255,255,0.15);color:white;font-family:'DM Sans',sans-serif;font-size:14px;outline:none;cursor:pointer;">
+            <option value="2025" style="color:#3d1f00;">2024 – 2025</option>
+            <option value="2024" style="color:#3d1f00;">2023 – 2024</option>
+            <option value="2023" style="color:#3d1f00;">2022 – 2023</option>
+            <option value="2022" style="color:#3d1f00;">2021 – 2022</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Stats cards -->
+      <div class="dash-stats-grid" style="max-width:1140px;margin:0 auto;padding:24px;display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px;">
+        <div style="background:white;border-radius:16px;padding:16px 20px;box-shadow:var(--ombre);border-left:4px solid var(--rouge-vif);">
+          <div style="font-size:10px;color:var(--gris);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Total étudiants</div>
+          <div id="dash-total" style="font-size:28px;font-weight:800;color:var(--texte);">0</div>
+        </div>
+        <div style="background:white;border-radius:16px;padding:16px 20px;box-shadow:var(--ombre);border-left:4px solid #3da86d;">
+          <div style="font-size:10px;color:var(--gris);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Validés</div>
+          <div id="dash-ok" style="font-size:28px;font-weight:800;color:#3da86d;">0</div>
+        </div>
+        <div style="background:white;border-radius:16px;padding:16px 20px;box-shadow:var(--ombre);border-left:4px solid #e8932a;">
+          <div style="font-size:10px;color:var(--gris);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Reprise</div>
+          <div id="dash-alert" style="font-size:28px;font-weight:800;color:#e8932a;">0</div>
+        </div>
+        <div style="background:white;border-radius:16px;padding:16px 20px;box-shadow:var(--ombre);border-left:4px solid var(--rouge-vif);">
+          <div style="font-size:10px;color:var(--gris);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Reprendre le cours</div>
+          <div id="dash-danger" style="font-size:28px;font-weight:800;color:var(--rouge-vif);">0</div>
+        </div>
+        <div style="background:white;border-radius:16px;padding:16px 20px;box-shadow:var(--ombre);border-left:4px solid #3a7bd5;">
+          <div style="font-size:10px;color:var(--gris);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Moyenne générale</div>
+          <div id="dash-moy" style="font-size:28px;font-weight:800;color:#3a7bd5;">0</div>
+        </div>
+        <div style="background:white;border-radius:16px;padding:16px 20px;box-shadow:var(--ombre);border-left:4px solid #9b59b6;">
+          <div style="font-size:10px;color:var(--gris);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Taux de réussite</div>
+          <div id="dash-taux" style="font-size:28px;font-weight:800;color:#9b59b6;">0%</div>
+        </div>
+      </div>
+
+      <!-- Graphique par faculté -->
+      <div class="dash-charts-grid" style="max-width:1140px;margin:0 auto;padding:0 24px 24px;display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+
+        <!-- Répartition par statut -->
+        <div style="background:white;border-radius:16px;padding:20px;box-shadow:var(--ombre);">
+          <h3 style="font-family:'Playfair Display',serif;font-size:15px;color:var(--texte);margin-bottom:16px;">Répartition par statut</h3>
+          <div id="dash-chart-statut"></div>
+        </div>
+
+        <!-- Top 5 facultés -->
+        <div style="background:white;border-radius:16px;padding:20px;box-shadow:var(--ombre);">
+          <h3 style="font-family:'Playfair Display',serif;font-size:15px;color:var(--texte);margin-bottom:16px;">Étudiants par faculté</h3>
+          <div id="dash-chart-faculte"></div>
+        </div>
+      </div>
+
+      <!-- Liste alertes -->
+      <div style="max-width:1140px;margin:0 auto;padding:0 24px 48px;">
+        <div style="background:white;border-radius:16px;padding:20px;box-shadow:var(--ombre);">
+          <h3 style="font-family:'Playfair Display',serif;font-size:15px;color:var(--rouge-vif);margin-bottom:16px;">🔴 Étudiants en situation critique</h3>
+          <div id="dash-alertes"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LISTE ÉTUDIANTS VIEW -->
+    <div id="listeView" style="display:none">
+    <div class="hero">
+      <div class="hero-left">
+        <h1>Liste des Étudiants</h1>
+        <p>Année académique 2024 – 2025</p>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat"><div class="val" id="totalCount">250</div><div class="lbl">Total</div></div>
+        <div class="hero-stat"><div class="val" id="alertCount">0</div><div class="lbl">En alerte</div></div>
+        <div class="hero-stat"><div class="val" id="okCount">0</div><div class="lbl">Validés</div></div>
+      </div>
+    </div>
+    <div class="toolbar">
+      <div class="search-box">
+        <span>🔍</span>
+        <input type="text" id="searchInput" placeholder="Rechercher un étudiant..."/>
+      </div>
+      <select id="facultyFilter">
+        <option value="">Toutes les facultés</option>
+        <option value="Génie Informatique">Génie Informatique</option>
+        <option value="Génie Électromécanique">Génie Électromécanique</option>
+        <option value="Génie Civil">Génie Civil</option>
+        <option value="Architecture">Architecture</option>
+        <option value="Agronomie">Agronomie</option>
+        <option value="Administration">Administration</option>
+      </select>
+      <select id="statusFilter">
+        <option value="">Tous les statuts</option>
+        <option value="ok">✅ Validé</option>
+        <option value="alert">⚠️ Reprise</option>
+        <option value="danger">🔴 Reprendre le cours</option>
+      </select>
+      <button class="add-btn" onclick="openAddStudentModal()">+ Ajouter un étudiant</button>
+      <button class="add-btn" style="background:#3da86d;margin-left:8px;" onclick="openPromotionModal()">🎓 Promotion</button>
+      <button class="add-btn" style="background:#3a7bd5;margin-left:8px;" onclick="exportAllData()">📥 Exporter (backup)</button>
+    </div>
+    <div class="results-info">Affichage de <strong id="showCount">0</strong> étudiant(s)</div>
+    <div class="grid" id="studentGrid"></div>
+  </div>
+
+    </div> <!-- end listeView -->
+
+  <!-- MODAL: Ajouter un étudiant -->
+  <div id="addStudentOverlay" style="display:none;position:fixed;inset:0;background:rgba(245,166,35,0.45);backdrop-filter:blur(3px);z-index:400;align-items:center;justify-content:center;padding:20px;overflow-y:auto;">
+    <div style="background:white;border-radius:20px;padding:28px;width:100%;max-width:480px;box-shadow:0 24px 80px rgba(0,0,0,0.3);max-height:90vh;overflow-y:auto;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+        <h2 style="font-family:'Playfair Display',serif;font-size:19px;color:var(--texte);">➕ Ajouter un étudiant</h2>
+        <button onclick="closeAddStudentModal()" style="background:none;border:none;font-size:22px;color:var(--gris);cursor:pointer;line-height:1;">×</button>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <div>
+          <label style="display:block;font-size:11px;color:var(--gris);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:5px;font-weight:600;">Prénom *</label>
+          <input type="text" id="newStudentPrenom" placeholder="Ex: Jean" style="width:100%;padding:11px 14px;border:1.5px solid var(--rouge-bord);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;outline:none;"/>
+        </div>
+        <div>
+          <label style="display:block;font-size:11px;color:var(--gris);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:5px;font-weight:600;">Nom *</label>
+          <input type="text" id="newStudentNom" placeholder="Ex: Pierre" style="width:100%;padding:11px 14px;border:1.5px solid var(--rouge-bord);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;outline:none;"/>
+        </div>
+        <div>
+          <label style="display:block;font-size:11px;color:var(--gris);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:5px;font-weight:600;">Email *</label>
+          <input type="email" id="newStudentEmail" placeholder="exemple@gmail.com" style="width:100%;padding:11px 14px;border:1.5px solid var(--rouge-bord);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;outline:none;"/>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div>
+            <label style="display:block;font-size:11px;color:var(--gris);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:5px;font-weight:600;">Faculté *</label>
+            <select id="newStudentFaculte" style="width:100%;padding:11px 14px;border:1.5px solid var(--rouge-bord);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;outline:none;background:white;" onchange="updateNewStudentAnneeOptions()">
+              <option value="Génie Informatique">Génie Informatique</option>
+              <option value="Génie Électromécanique">Génie Électromécanique</option>
+              <option value="Génie Civil">Génie Civil</option>
+              <option value="Architecture">Architecture</option>
+              <option value="Agronomie">Agronomie</option>
+              <option value="Administration">Administration</option>
+            </select>
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;color:var(--gris);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:5px;font-weight:600;">Année *</label>
+            <select id="newStudentAnnee" style="width:100%;padding:11px 14px;border:1.5px solid var(--rouge-bord);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;outline:none;background:white;">
+              <option value="1">1ère année</option>
+              <option value="2">2ème année</option>
+              <option value="3">3ème année</option>
+              <option value="4">4ème année</option>
+              <option value="5">5ème année</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div id="addStudentError" style="display:none;background:#fff0f0;border:1px solid #ffcccc;color:var(--rouge-vif);border-radius:10px;padding:10px 14px;font-size:13px;margin-top:16px;"></div>
+
+      <div style="display:flex;gap:12px;margin-top:22px;">
+        <button onclick="closeAddStudentModal()" style="flex:1;padding:12px;background:var(--creme);border:none;border-radius:12px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:14px;cursor:pointer;color:var(--gris);">Annuler</button>
+        <button onclick="submitNewStudent()" style="flex:1;padding:12px;background:var(--rouge);color:white;border:none;border-radius:12px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:14px;cursor:pointer;">Ajouter l'étudiant</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: PROMOTION EN MASSE -->
+  <div id="promotionOverlay" style="display:none;position:fixed;inset:0;background:rgba(61,168,109,0.35);backdrop-filter:blur(3px);z-index:400;align-items:center;justify-content:center;padding:20px;overflow-y:auto;">
+    <div style="background:white;border-radius:20px;padding:28px;width:100%;max-width:480px;box-shadow:0 24px 80px rgba(0,0,0,0.3);max-height:90vh;overflow-y:auto;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+        <h2 style="font-family:'Playfair Display',serif;font-size:19px;color:var(--texte);">🎓 Promotion d'année</h2>
+        <button onclick="closePromotionModal()" style="background:none;border:none;font-size:22px;color:var(--gris);cursor:pointer;line-height:1;">×</button>
+      </div>
+      <p style="font-size:12.5px;color:var(--gris);margin-bottom:18px;">Fait monter tous les étudiants d'une année vers l'année suivante, en un seul clic.</p>
+
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <div>
+          <label style="display:block;font-size:11px;color:var(--gris);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:5px;font-weight:600;">Faculté</label>
+          <select id="promoFaculte" onchange="updatePromotionPreview()" style="width:100%;padding:11px 14px;border:1.5px solid var(--rouge-bord);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;outline:none;background:white;">
+            <option value="">Toutes les facultés</option>
+            <option value="Génie Informatique">Génie Informatique</option>
+            <option value="Génie Électromécanique">Génie Électromécanique</option>
+            <option value="Génie Civil">Génie Civil</option>
+            <option value="Architecture">Architecture</option>
+            <option value="Agronomie">Agronomie</option>
+            <option value="Administration">Administration</option>
+          </select>
+        </div>
+        <div>
+          <label style="display:block;font-size:11px;color:var(--gris);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:5px;font-weight:600;">Promouvoir les étudiants de *</label>
+          <select id="promoAnnee" onchange="updatePromotionPreview()" style="width:100%;padding:11px 14px;border:1.5px solid var(--rouge-bord);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;outline:none;background:white;">
+            <option value="1">1ère année → 2ème année</option>
+            <option value="2">2ème année → 3ème année</option>
+            <option value="3">3ème année → 4ème année</option>
+            <option value="4">4ème année → 5ème année</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="promoCount" style="background:#f0faf5;border:1px solid #cdeedd;color:#256b48;border-radius:10px;padding:10px 14px;font-size:13px;margin-top:16px;font-weight:600;"></div>
+      <div id="promoError" style="display:none;background:#fff0f0;border:1px solid #ffcccc;color:var(--rouge-vif);border-radius:10px;padding:10px 14px;font-size:13px;margin-top:10px;"></div>
+
+      <div style="display:flex;gap:12px;margin-top:22px;">
+        <button onclick="closePromotionModal()" style="flex:1;padding:12px;background:var(--creme);border:none;border-radius:12px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:14px;cursor:pointer;color:var(--gris);">Annuler</button>
+        <button onclick="promoteStudents()" style="flex:1;padding:12px;background:#3da86d;color:white;border:none;border-radius:12px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:14px;cursor:pointer;">Promouvoir</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- VUE: PROFIL (admin ou étudiant) -->
+  <div id="profileView" style="display:none">
+    <div class="container" id="profileContainer"></div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer style="text-align:center;padding:24px 20px;margin-top:20px;">
+    <p style="font-size:12px;color:var(--gris);letter-spacing:0.3px;">
+      Created by <span style="color:var(--rouge-vif);font-weight:700;">GHOST_MG7</span>
+    </p>
+  </footer>
+
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span id="toastMsg"></span>
+</div>
+
+<script>
+// ══════════════════════════════════
+// FIREBASE CONFIGURATION
+// ══════════════════════════════════
+const firebaseConfig = {
+  apiKey: "AIzaSyAGa7nJ5nSNm3xnIvYDqwhnxnDJjQRHVD4",
+  authDomain: "ugoc-systeme.firebaseapp.com",
+  projectId: "ugoc-systeme",
+  storageBucket: "ugoc-systeme.firebasestorage.app",
+  messagingSenderId: "1006146659966",
+  appId: "1:1006146659966:web:3de9e7aeeaeccd95ea1a2f"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db   = firebase.firestore();
+
+// ── App Check (protection anti-bot / anti-abus) ──
+// DÉSACTIVÉ par défaut : remplacer RECAPTCHA_SITE_KEY par une vraie clé
+// reCAPTCHA v3 générée dans Firebase Console → App Check, puis mettre
+// APP_CHECK_ENABLED à true. Voir les instructions fournies pour l'activer.
+const APP_CHECK_ENABLED = false;
+const RECAPTCHA_SITE_KEY = 'REMPLACER_PAR_VOTRE_CLE_RECAPTCHA_V3';
+if(APP_CHECK_ENABLED){
+  try {
+    firebase.appCheck().activate(RECAPTCHA_SITE_KEY, true);
+  } catch(e){ console.warn('App Check non activé:', e.message); }
+}
+
+// ── Échapper le HTML pour empêcher les injections XSS ──
+// À utiliser partout où une donnée saisie par l'utilisateur (prénom, nom,
+// adresse, etc.) est insérée dans du innerHTML.
+function esc(str){
+  return String(str==null ? '' : str).replace(/[&<>"']/g, function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+  });
+}
+
+// Code d'inscription partagé avec les étudiants de UGOC (change-le si besoin —
+// c'est une barrière simple, pas un secret cryptographique fort)
+const ENROLLMENT_CODE = 'UGOC CONNECT 2026';
+
+// Note : il n'y a plus de constante ADMIN_EMAIL dans ce fichier — le statut
+// admin est déterminé en vérifiant l'existence d'un document Firestore
+// admins/{monEmail} après connexion (voir doLogin). L'email de l'admin
+// n'apparaît donc JAMAIS dans le code source visible par les utilisateurs.
+
+// ── Helpers Firebase Auth ──
+async function firebaseLogin(email, password){
+  try {
+    await auth.signInWithEmailAndPassword(email, password);
+    return {success:true};
+  } catch(e){
+    console.warn('🔑 Tentative échouée:', e.code);
+
+    // Le SDK Firebase peut avoir déjà authentifié l'utilisateur en interne
+    // (le mot de passe était correct) même si cette promesse échoue à cause
+    // d'un bug connu (accounts:lookup / TOKEN_EXPIRED juste après connexion).
+    // On vérifie directement l'état réel plutôt que de se fier à l'erreur.
+    await new Promise(r => setTimeout(r, 300));
+    if(auth.currentUser && auth.currentUser.email && auth.currentUser.email.toLowerCase() === email.toLowerCase()){
+      console.log('✅ Utilisateur en réalité déjà connecté malgré l\'erreur — accepté');
+      return {success:true};
+    }
+
+    // Sinon, on réessaie une fois après un court délai
+    try {
+      await new Promise(r => setTimeout(r, 1000));
+      await auth.signInWithEmailAndPassword(email, password);
+      console.log('✅ 2ème tentative réussie !');
+      return {success:true};
+    } catch(e2){
+      console.warn('❌ 2ème tentative échouée aussi:', e2.code);
+      if(auth.currentUser && auth.currentUser.email && auth.currentUser.email.toLowerCase() === email.toLowerCase()){
+        console.log('✅ Utilisateur en réalité déjà connecté malgré la 2ème erreur — accepté');
+        return {success:true};
+      }
+      return {success:false, code:e2.code};
+    }
+  }
+}
+async function firebaseRegister(email, password){
+  try {
+    await auth.createUserWithEmailAndPassword(email, password);
+    // Envoyer un email de vérification (bonne pratique de sécurité —
+    // n'empêche pas l'accès, mais confirme que la personne possède bien cet email)
+    try { await auth.currentUser.sendEmailVerification(); }
+    catch(ve){ console.warn('sendEmailVerification:', ve.code); }
+    return {success:true};
+  }
+  catch(e){ console.error('❌ firebaseRegister:', e.code, e.message); return {success:false, code:e.code}; }
+}
+
+// ── Traduit les codes d'erreur Firebase Auth en messages clairs pour l'utilisateur
+function firebaseErrorMessage(code){
+  switch(code){
+    case 'auth/weak-password':        return 'Mot de passe trop faible (min. 6 caractères exigés par Firebase).';
+    case 'auth/invalid-email':         return 'Adresse email invalide.';
+    case 'auth/email-already-in-use':  return 'Cet email est déjà utilisé par un autre compte.';
+    case 'auth/network-request-failed':return 'Problème de connexion réseau. Vérifiez votre internet et réessayez.';
+    case 'auth/too-many-requests':     return 'Trop de tentatives. Réessayez dans quelques minutes.';
+    default: return 'Erreur lors de la création du compte' + (code ? ' (' + code + ')' : '') + '. Réessayez.';
+  }
+}
+async function firebaseLogout(){ await auth.signOut(); }
+
+// ── Helpers Firestore ──
+async function saveStudentData(id, data){
+  try {
+    await db.collection('etudiants').doc(id).set(data, {merge:true});
+    console.log('✅ Firestore SAVE réussi pour', id, Object.keys(data));
+    return true;
+  }
+  catch(e){ console.error('❌ Firestore SAVE échoué pour', id, ':', e.code, e.message); return false; }
+}
+async function getStudentByEmail(email){
+  try {
+    const snap = await db.collection('etudiants').where('email','==',email).limit(1).get();
+    return snap.empty ? null : snap.docs[0].data();
+  } catch(e){ console.error('Firestore get:', e); return null; }
+}
+async function getAllStudents(){
+  try {
+    const snap = await db.collection('etudiants').get();
+    return snap.docs.map(d => d.data());
+  } catch(e){ console.error('Firestore getAll:', e); return []; }
+}
+
+// ── Compteur atomique pour garantir un ID étudiant unique, même si
+// plusieurs personnes s'inscrivent en même temps depuis des sessions différentes
+async function getNextStudentNumber(){
+  const counterRef = db.collection('compteurs').doc('etudiants');
+  try {
+    return await db.runTransaction(async (tx) => {
+      const doc = await tx.get(counterRef);
+      const current = doc.exists ? (doc.data().value || 0) : 0; // démarre à 0 (pas de comptes démo)
+      const next = current + 1;
+      tx.set(counterRef, { value: next });
+      return next;
+    });
+  } catch(e){
+    console.error('❌ Erreur compteur ID étudiant:', e.code, e.message);
+    // Solution de secours peu fiable mais évite un crash total
+    return students.length + 1 + Math.floor(Math.random()*10000);
+  }
+}
+
+// ── Helper — sauvegarde la photo de l'étudiant directement dans Firestore ──
+// (Storage Firebase mande plan Blaze, donc nou konprese foto a an base64
+//  epi nou estoke l tankou yon chan tèks nan dokiman etidyan an)
+function compressImage(dataUrl, maxWidth, maxHeight, quality){
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      let w = img.width, h = img.height;
+      const ratio = Math.min(maxWidth / w, maxHeight / h, 1);
+      w = Math.round(w * ratio);
+      h = Math.round(h * ratio);
+      const canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, w, h);
+      resolve(canvas.toDataURL('image/jpeg', quality));
+    };
+    img.onerror = () => reject(new Error('Erreur chajman imaj pou konpresyon'));
+    img.src = dataUrl;
+  });
+}
+
+async function persistStudentPhoto(studentId, dataUrl){
+  if(!dataUrl) return null;
+  console.log('📷 persistStudentPhoto démarré pour', studentId);
+  try {
+    // Konprese foto a (300x300 max, kalite 70%) pou l rete anba limit 1MB Firestore
+    const compressed = await compressImage(dataUrl, 300, 300, 0.7);
+    console.log('📷 Photo compressée, taille (chars):', compressed.length);
+    await saveStudentData(studentId, { photo: compressed });
+    return compressed;
+  } catch(e){
+    console.error('❌ Erreur sauvegarde photo Firestore:', e.code, e.message);
+    return null;
+  }
+}
+
+// ══════════════════════════════════
+// DONNÉES
+// ══════════════════════════════════
+
+const facultes = ['Génie Informatique','Génie Électromécanique','Génie Civil','Architecture','Agronomie','Administration'];
+const statusList = ['ok','ok','ok','alert','danger'];
+const prenoms    = ['Marie','Jean','Pierre','Anne','Claude','Sophie','Marc','Lucie','Paul','Chantal','David','Rose','Henri','Nadège','Éric','Fabiola','Patrick','Sandra','Willy','Danielle'];
+const noms       = ['Jean-Baptiste','Pierre','Louis','Duval','Martin','Charles','Michel','François','Joseph','Théodore','Dupont','Moïse','Bernard','Simon','Alexis','Cadet','Préval','Bastien','Gilles','Toussaint'];
+
+
+// Tableau des étudiants — démarre vide en production.
+// Les vrais étudiants sont chargés depuis Firestore via syncStudentsFromFirestore()
+// après connexion (les Rules exigent request.auth != null pour lire).
+const students = [];
+
+// ── Synchroniser avec les vraies données Firestore
+// (appelée après connexion, quand l'utilisateur est authentifié —
+//  les Rules Firestore exigent request.auth != null pour lire)
+async function syncStudentsFromFirestore(){
+  console.log('🔄 syncStudentsFromFirestore démarré...');
+  const real = await getAllStudents();
+  console.log('🔄 Documents reçus de Firestore:', real.length);
+  const withPhoto = real.filter(r => r.photo || r.photoURL);
+  console.log('🔄 Documents avec une photo sauvegardée:', withPhoto.map(r => r.id));
+  real.forEach(r => {
+    if(!r.id) return;
+    const idx = students.findIndex(s => s.id === r.id);
+    if(idx >= 0){
+      Object.assign(students[idx], r);
+      if(r.photo || r.photoURL) students[idx].photo = r.photo || r.photoURL;
+    } else {
+      students.unshift(Object.assign({
+        note: 0, status: 'alert',
+        photo: r.photo || r.photoURL || `https://i.pravatar.cc/150?img=${Math.floor(Math.random()*70)+1}`
+      }, r));
+    }
+  });
+}
+
+// ══════════════════════════════════
+// COURS PAR FACULTÉ — 10 semestres (2 par année, sur 5 années)
+// Les clés correspondent EXACTEMENT aux noms de faculté utilisés dans le système
+// ══════════════════════════════════
+const coursParFaculte = {
+  'Génie Informatique': [
+    [{code:'INF 0100',nom:'Mécanique Conceptuelle'},{code:'INF 0101',nom:'Algèbre Matricielle'},{code:'INF 0102',nom:'Chimie Générale'},{code:'INF 0103',nom:'Mathématiques Générales'},{code:'INF 0104',nom:'Mécanique Statique'}],
+    [{code:'INF 0200',nom:'Programmation en C'},{code:'INF 0201',nom:'Physique Générale'},{code:'INF 0202',nom:'Électronique de Base'},{code:'INF 0203',nom:'Analyse Mathématique'},{code:'INF 0204',nom:'Structure de Données'}],
+    [{code:'INF 0300',nom:'Programmation avancée C'},{code:'INF 0301',nom:'Logique mathématique'},{code:'INF 0302',nom:'Architecture des ordinateurs'},{code:'INF 0303',nom:'Circuits logiques'},{code:'INF 0304',nom:'Introduction aux bases de données'}],
+    [{code:'INF 0400',nom:'Systèmes d\'exploitation'},{code:'INF 0401',nom:'Réseaux informatiques'},{code:'INF 0402',nom:'Probabilités et Statistiques'},{code:'INF 0403',nom:'Programmation orientée objet'},{code:'INF 0404',nom:'Bases de données avancées'}],
+    [{code:'INF 0500',nom:'Infographie/Technologies multimédia'},{code:'INF 0501',nom:'Gestion des systèmes d\'information'},{code:'INF 0502',nom:'Principes de communication'},{code:'INF 0503',nom:'Administration SQL Server'},{code:'INF 0504',nom:'Programmation Java'}],
+    [{code:'INF 0600',nom:'Développement Web'},{code:'INF 0601',nom:'Sécurité informatique'},{code:'INF 0602',nom:'Intelligence artificielle'},{code:'INF 0603',nom:'Gestion de projet'},{code:'INF 0604',nom:'Programmation mobile'}],
+    [{code:'INF 0700',nom:'Systèmes embarqués'},{code:'INF 0701',nom:'Maintenance informatique'},{code:'INF 0702',nom:'Génie logiciel'},{code:'INF 0703',nom:'Projet informatique'},{code:'INF 0704',nom:'Réseaux avancés'}],
+    [{code:'INF 0800',nom:'Cloud Computing'},{code:'INF 0801',nom:'Big Data'},{code:'INF 0802',nom:'Virtualisation'},{code:'INF 0803',nom:'DevOps'},{code:'INF 0804',nom:'Cybersécurité avancée'}],
+    [{code:'INF 0900',nom:'Innovation Technologique'},{code:'INF 0901',nom:'Ergonomie des interfaces'},{code:'INF 0902',nom:'Entrepreneuriat et innovation'},{code:'INF 0903',nom:'Management des projets informatiques'},{code:'INF 0904',nom:'Stage d\'application'}],
+    [{code:'INF 1000',nom:'Mémoire de fin d\'études'},{code:'INF 1001',nom:'Déontologie professionnelle'},{code:'INF 1002',nom:'Veille technologique'},{code:'INF 1003',nom:'Projet de fin d\'études'},{code:'INF 1004',nom:'Soutenance'}],
+  ],
+  'Génie Électromécanique': [
+    [{code:'GEM 0100',nom:'Mécanique Générale'},{code:'GEM 0101',nom:'Mathématiques I'},{code:'GEM 0102',nom:'Chimie Générale'},{code:'GEM 0103',nom:'Dessin Technique'},{code:'GEM 0104',nom:'Électricité de Base'}],
+    [{code:'GEM 0200',nom:'Résistance des Matériaux'},{code:'GEM 0201',nom:'Mathématiques II'},{code:'GEM 0202',nom:'Physique Générale'},{code:'GEM 0203',nom:'Électronique de Base'},{code:'GEM 0204',nom:'Programmation'}],
+    [{code:'GEM 0300',nom:'Thermodynamique'},{code:'GEM 0301',nom:'Mécanique des Fluides'},{code:'GEM 0302',nom:'Électrotechnique I'},{code:'GEM 0303',nom:'Matériaux Industriels'},{code:'GEM 0304',nom:'Statistiques Appliquées'}],
+    [{code:'GEM 0400',nom:'Automatisme I'},{code:'GEM 0401',nom:'Électrotechnique II'},{code:'GEM 0402',nom:'Machines Électriques I'},{code:'GEM 0403',nom:'Conception Assistée par Ordinateur'},{code:'GEM 0404',nom:'Systèmes Hydrauliques'}],
+    [{code:'GEM 0500',nom:'Machines Électriques II'},{code:'GEM 0501',nom:'Automatisme II'},{code:'GEM 0502',nom:'Régulation Industrielle'},{code:'GEM 0503',nom:'Maintenance Industrielle I'},{code:'GEM 0504',nom:'Énergies Renouvelables'}],
+    [{code:'GEM 0600',nom:'Robotique de Base'},{code:'GEM 0601',nom:'Instrumentation Industrielle'},{code:'GEM 0602',nom:'Production Mécanique'},{code:'GEM 0603',nom:'Gestion de Maintenance'},{code:'GEM 0604',nom:'Électronique de Puissance'}],
+    [{code:'GEM 0700',nom:'Automatismes Programmables (API)'},{code:'GEM 0701',nom:'Systèmes de Production Industriels'},{code:'GEM 0702',nom:'Vibrations Mécaniques'},{code:'GEM 0703',nom:'Sécurité Industrielle'},{code:'GEM 0704',nom:'Projet Électromécanique I'}],
+    [{code:'GEM 0800',nom:'Efficacité Énergétique'},{code:'GEM 0801',nom:'Réseaux Électriques Industriels'},{code:'GEM 0802',nom:'Conception de Systèmes Mécaniques'},{code:'GEM 0803',nom:'Gestion de Projet Industriel'},{code:'GEM 0804',nom:'Projet Électromécanique II'}],
+    [{code:'GEM 0900',nom:'Innovation Technologique'},{code:'GEM 0901',nom:'Entrepreneuriat Industriel'},{code:'GEM 0902',nom:'Normes et Certifications'},{code:'GEM 0903',nom:'Stage d\'application'},{code:'GEM 0904',nom:'Séminaire Électromécanique'}],
+    [{code:'GEM 1000',nom:'Mémoire de fin d\'études'},{code:'GEM 1001',nom:'Déontologie professionnelle'},{code:'GEM 1002',nom:'Veille technologique'},{code:'GEM 1003',nom:'Projet de fin d\'études'},{code:'GEM 1004',nom:'Soutenance'}],
+  ],
+  'Génie Civil': [
+    [{code:'GCI 0100',nom:'Mathématiques I'},{code:'GCI 0101',nom:'Dessin Technique'},{code:'GCI 0102',nom:'Chimie des Matériaux'},{code:'GCI 0103',nom:'Mécanique Générale'},{code:'GCI 0104',nom:'Topographie I'}],
+    [{code:'GCI 0200',nom:'Mathématiques II'},{code:'GCI 0201',nom:'Résistance des Matériaux I'},{code:'GCI 0202',nom:'Physique Générale'},{code:'GCI 0203',nom:'Topographie II'},{code:'GCI 0204',nom:'Matériaux de Construction I'}],
+    [{code:'GCI 0300',nom:'Résistance des Matériaux II'},{code:'GCI 0301',nom:'Béton Armé I'},{code:'GCI 0302',nom:'Mécanique des Sols I'},{code:'GCI 0303',nom:'Hydraulique Générale'},{code:'GCI 0304',nom:'Informatique Appliquée'}],
+    [{code:'GCI 0400',nom:'Béton Armé II'},{code:'GCI 0401',nom:'Mécanique des Sols II'},{code:'GCI 0402',nom:'Structures Métalliques I'},{code:'GCI 0403',nom:'Hydrologie'},{code:'GCI 0404',nom:'Statistiques Appliquées'}],
+    [{code:'GCI 0500',nom:'Fondations'},{code:'GCI 0501',nom:'Structures Métalliques II'},{code:'GCI 0502',nom:'Voirie et Réseaux Divers (VRD)'},{code:'GCI 0503',nom:'Béton Précontraint'},{code:'GCI 0504',nom:'Gestion de Chantier I'}],
+    [{code:'GCI 0600',nom:'Ouvrages d\'Art'},{code:'GCI 0601',nom:'Génie Sanitaire'},{code:'GCI 0602',nom:'Charpente Bois'},{code:'GCI 0603',nom:'CAO/DAO Bâtiment'},{code:'GCI 0604',nom:'Gestion de Chantier II'}],
+    [{code:'GCI 0700',nom:'Route et Autoroute'},{code:'GCI 0701',nom:'Évaluation Environnementale'},{code:'GCI 0702',nom:'Structures Parasismiques'},{code:'GCI 0703',nom:'Métré et Devis'},{code:'GCI 0704',nom:'Projet de Construction I'}],
+    [{code:'GCI 0800',nom:'Gestion de Projets BTP'},{code:'GCI 0801',nom:'Réhabilitation des Structures'},{code:'GCI 0802',nom:'Économie de la Construction'},{code:'GCI 0803',nom:'Normes et Réglementation'},{code:'GCI 0804',nom:'Projet de Construction II'}],
+    [{code:'GCI 0900',nom:'Innovation en Construction Durable'},{code:'GCI 0901',nom:'Entrepreneuriat en BTP'},{code:'GCI 0902',nom:'Sécurité sur Chantier'},{code:'GCI 0903',nom:'Stage d\'application'},{code:'GCI 0904',nom:'Séminaire Génie Civil'}],
+    [{code:'GCI 1000',nom:'Mémoire de fin d\'études'},{code:'GCI 1001',nom:'Déontologie professionnelle'},{code:'GCI 1002',nom:'Veille technologique'},{code:'GCI 1003',nom:'Projet de fin d\'études'},{code:'GCI 1004',nom:'Soutenance'}],
+  ],
+  'Architecture': [
+    [{code:'ARC 0100',nom:'Histoire de l\'architecture'},{code:'ARC 0101',nom:'Dessin architectural I'},{code:'ARC 0102',nom:'Mathématiques appliquées'},{code:'ARC 0103',nom:'Géométrie descriptive'},{code:'ARC 0104',nom:'Introduction au design'}],
+    [{code:'ARC 0200',nom:'Dessin architectural II'},{code:'ARC 0201',nom:'Structures I'},{code:'ARC 0202',nom:'Matériaux de construction'},{code:'ARC 0203',nom:'Infographie architecturale'},{code:'ARC 0204',nom:'Design d\'intérieur I'}],
+    [{code:'ARC 0300',nom:'Projet architectural I'},{code:'ARC 0301',nom:'Structures II'},{code:'ARC 0302',nom:'Urbanisme'},{code:'ARC 0303',nom:'Design d\'intérieur II'},{code:'ARC 0304',nom:'Aménagement du territoire'}],
+    [{code:'ARC 0400',nom:'Projet architectural II'},{code:'ARC 0401',nom:'Construction durable'},{code:'ARC 0402',nom:'Patrimoine architectural'},{code:'ARC 0403',nom:'Architecture haïtienne'},{code:'ARC 0404',nom:'Théorie de l\'architecture'}],
+    [{code:'ARC 0500',nom:'Projet architectural III'},{code:'ARC 0501',nom:'Structures avancées'},{code:'ARC 0502',nom:'Acoustique et éclairage'},{code:'ARC 0503',nom:'Réglementation de la construction'},{code:'ARC 0504',nom:'Paysagisme'}],
+    [{code:'ARC 0600',nom:'Projet architectural IV'},{code:'ARC 0601',nom:'BIM et technologies'},{code:'ARC 0602',nom:'Architecture bioclimatique'},{code:'ARC 0603',nom:'Économie de la construction'},{code:'ARC 0604',nom:'Gestion de chantier'}],
+    [{code:'ARC 0700',nom:'Projet urbain'},{code:'ARC 0701',nom:'Architecture parasismique'},{code:'ARC 0702',nom:'Réhabilitation du bâti'},{code:'ARC 0703',nom:'Design paramétrique'},{code:'ARC 0704',nom:'Stage en cabinet I'}],
+    [{code:'ARC 0800',nom:'Projet de fin de cycle I'},{code:'ARC 0801',nom:'Habitat social'},{code:'ARC 0802',nom:'Architecture d\'intérieur avancée'},{code:'ARC 0803',nom:'Éclairage et confort thermique'},{code:'ARC 0804',nom:'Stage en cabinet II'}],
+    [{code:'ARC 0900',nom:'Innovation en architecture'},{code:'ARC 0901',nom:'Entrepreneuriat en architecture'},{code:'ARC 0902',nom:'Séminaire de recherche'},{code:'ARC 0903',nom:'Projet de fin de cycle II'},{code:'ARC 0904',nom:'Déontologie professionnelle'}],
+    [{code:'ARC 1000',nom:'Mémoire de fin d\'études'},{code:'ARC 1001',nom:'Réglementation professionnelle'},{code:'ARC 1002',nom:'Veille architecturale'},{code:'ARC 1003',nom:'Projet de fin d\'études'},{code:'ARC 1004',nom:'Soutenance'}],
+  ],
+  'Agronomie': [
+    [{code:'AGR 0100',nom:'Biologie Végétale'},{code:'AGR 0101',nom:'Chimie Générale'},{code:'AGR 0102',nom:'Mathématiques Appliquées'},{code:'AGR 0103',nom:'Pédologie I'},{code:'AGR 0104',nom:'Introduction à l\'Agronomie'}],
+    [{code:'AGR 0200',nom:'Biologie Animale'},{code:'AGR 0201',nom:'Chimie du Sol'},{code:'AGR 0202',nom:'Botanique'},{code:'AGR 0203',nom:'Pédologie II'},{code:'AGR 0204',nom:'Climatologie Agricole'}],
+    [{code:'AGR 0300',nom:'Physiologie Végétale'},{code:'AGR 0301',nom:'Génétique'},{code:'AGR 0302',nom:'Agrométéorologie'},{code:'AGR 0303',nom:'Machinisme Agricole I'},{code:'AGR 0304',nom:'Statistiques Agricoles'}],
+    [{code:'AGR 0400',nom:'Phytotechnie I'},{code:'AGR 0401',nom:'Zootechnie I'},{code:'AGR 0402',nom:'Phytopathologie'},{code:'AGR 0403',nom:'Irrigation et Drainage'},{code:'AGR 0404',nom:'Machinisme Agricole II'}],
+    [{code:'AGR 0500',nom:'Phytotechnie II'},{code:'AGR 0501',nom:'Zootechnie II'},{code:'AGR 0502',nom:'Économie Agricole'},{code:'AGR 0503',nom:'Agroforesterie'},{code:'AGR 0504',nom:'Fertilisation des Sols'}],
+    [{code:'AGR 0600',nom:'Élevage et Production Animale'},{code:'AGR 0601',nom:'Cultures Maraîchères'},{code:'AGR 0602',nom:'Aménagement Rural'},{code:'AGR 0603',nom:'Agro-industrie I'},{code:'AGR 0604',nom:'Gestion des Exploitations Agricoles'}],
+    [{code:'AGR 0700',nom:'Protection des Cultures'},{code:'AGR 0701',nom:'Aquaculture'},{code:'AGR 0702',nom:'Vulgarisation Agricole'},{code:'AGR 0703',nom:'Agro-industrie II'},{code:'AGR 0704',nom:'Développement Rural'}],
+    [{code:'AGR 0800',nom:'Sécurité Alimentaire'},{code:'AGR 0801',nom:'Politique Agricole'},{code:'AGR 0802',nom:'Gestion des Ressources Naturelles'},{code:'AGR 0803',nom:'Agro-écologie'},{code:'AGR 0804',nom:'Projet Agricole I'}],
+    [{code:'AGR 0900',nom:'Innovation Agricole'},{code:'AGR 0901',nom:'Entrepreneuriat Agricole'},{code:'AGR 0902',nom:'Normes Phytosanitaires'},{code:'AGR 0903',nom:'Stage d\'application'},{code:'AGR 0904',nom:'Séminaire Agronomie'}],
+    [{code:'AGR 1000',nom:'Mémoire de fin d\'études'},{code:'AGR 1001',nom:'Déontologie professionnelle'},{code:'AGR 1002',nom:'Veille technologique'},{code:'AGR 1003',nom:'Projet de fin d\'études'},{code:'AGR 1004',nom:'Soutenance'}],
+  ],
+  'Administration': [
+    [{code:'ADM 0100',nom:'Introduction à la gestion'},{code:'ADM 0101',nom:'Comptabilité générale I'},{code:'ADM 0102',nom:'Mathématiques financières'},{code:'ADM 0103',nom:'Économie générale'},{code:'ADM 0104',nom:'Droit des affaires'}],
+    [{code:'ADM 0200',nom:'Comptabilité générale II'},{code:'ADM 0201',nom:'Marketing fondamental'},{code:'ADM 0202',nom:'Statistiques appliquées'},{code:'ADM 0203',nom:'Gestion des ressources humaines'},{code:'ADM 0204',nom:'Informatique de gestion'}],
+    [{code:'ADM 0300',nom:'Finance d\'entreprise'},{code:'ADM 0301',nom:'Gestion de la production'},{code:'ADM 0302',nom:'Marketing stratégique'},{code:'ADM 0303',nom:'Comptabilité analytique'},{code:'ADM 0304',nom:'Management des organisations'}],
+    [{code:'ADM 0400',nom:'Audit et contrôle'},{code:'ADM 0401',nom:'Fiscalité'},{code:'ADM 0402',nom:'Gestion de projet'},{code:'ADM 0403',nom:'Commerce international'},{code:'ADM 0404',nom:'Systèmes d\'information'}],
+    [{code:'ADM 0500',nom:'Stratégie d\'entreprise'},{code:'ADM 0501',nom:'Entrepreneuriat'},{code:'ADM 0502',nom:'Gestion financière avancée'},{code:'ADM 0503',nom:'Leadership et management'},{code:'ADM 0504',nom:'Comptabilité des sociétés'}],
+    [{code:'ADM 0600',nom:'Contrôle de gestion'},{code:'ADM 0601',nom:'Marketing digital'},{code:'ADM 0602',nom:'Droit du travail'},{code:'ADM 0603',nom:'Négociation commerciale'},{code:'ADM 0604',nom:'Gestion de la qualité'}],
+    [{code:'ADM 0700',nom:'Économétrie de gestion'},{code:'ADM 0701',nom:'Gestion des risques'},{code:'ADM 0702',nom:'Management interculturel'},{code:'ADM 0703',nom:'Supply Chain Management'},{code:'ADM 0704',nom:'Projet de gestion I'}],
+    [{code:'ADM 0800',nom:'Éthique des affaires'},{code:'ADM 0801',nom:'Développement durable'},{code:'ADM 0802',nom:'Gestion du changement'},{code:'ADM 0803',nom:'Business Intelligence'},{code:'ADM 0804',nom:'Projet de gestion II'}],
+    [{code:'ADM 0900',nom:'Innovation managériale'},{code:'ADM 0901',nom:'Entrepreneuriat avancé'},{code:'ADM 0902',nom:'Stage en entreprise'},{code:'ADM 0903',nom:'Séminaire de gestion'},{code:'ADM 0904',nom:'Étude de cas'}],
+    [{code:'ADM 1000',nom:'Mémoire de fin d\'études'},{code:'ADM 1001',nom:'Déontologie professionnelle'},{code:'ADM 1002',nom:'Veille économique'},{code:'ADM 1003',nom:'Projet de fin d\'études'},{code:'ADM 1004',nom:'Soutenance'}],
+  ],
+};
+
+// Fakilte ki pa gen kou espesifik yo — kou jeneral (secours, ne devrait plus servir)
+const coursDefault = [
+  [{code:'GEN 0100',nom:'Culture générale'},{code:'GEN 0101',nom:'Méthodologie'},{code:'GEN 0102',nom:'Français académique'},{code:'GEN 0103',nom:'Anglais I'},{code:'GEN 0104',nom:'Informatique de base'}],
+  [{code:'GEN 0200',nom:'Recherche appliquée'},{code:'GEN 0201',nom:'Communication professionnelle'},{code:'GEN 0202',nom:'Anglais II'},{code:'GEN 0203',nom:'Statistiques'},{code:'GEN 0204',nom:'Stage I'}],
+  [{code:'GEN 0300',nom:'Théories avancées'},{code:'GEN 0301',nom:'Séminaire de spécialité'},{code:'GEN 0302',nom:'Projet de recherche'},{code:'GEN 0303',nom:'Stage II'},{code:'GEN 0304',nom:'Mémoire de fin d\'études'}],
+];
+
+// Génère une variation stable (toujours la même) à partir d'un texte,
+// pour que le "Statut académique" et le tableau "Matières" affichent
+// toujours les mêmes notes par défaut pour un même cours.
+// ── Corrections de curriculum décidées par l'admin (cours renommé, code
+// changé, ou cours devenu indisponible/supprimé du programme). Un seul
+// document Firestore partagé : settings/curriculumOverrides, forme :
+//   { [faculte]: { [ancienCode]: { code, nom, removed } } }
+let curriculumOverrides = {};
+
+async function loadCurriculumOverrides(){
+  try {
+    const doc = await db.collection('settings').doc('curriculumOverrides').get();
+    curriculumOverrides = doc.exists ? (doc.data().parFaculte || {}) : {};
+  } catch(e){
+    console.warn('⚠️ loadCurriculumOverrides:', e.code || e.message);
+    curriculumOverrides = {};
+  }
+}
+
+// Sauvegarder une correction (édition ou suppression) pour un cours donné
+// d'une faculté. Admin seulement (voir Firestore Rules).
+async function saveCurriculumOverride(faculte, origCode, patch){
+  if(!curriculumOverrides[faculte]) curriculumOverrides[faculte] = {};
+  var previous = curriculumOverrides[faculte][origCode];
+  curriculumOverrides[faculte][origCode] = Object.assign({}, previous, patch);
+  try {
+    await db.collection('settings').doc('curriculumOverrides').set({ parFaculte: curriculumOverrides }, { merge: true });
+    return true;
+  } catch(e){
+    // La sauvegarde a échoué (ex: permission-denied) — on annule le
+    // changement en mémoire pour ne pas laisser l'écran afficher quelque
+    // chose qui n'a en réalité jamais été sauvegardé dans Firestore.
+    if(previous === undefined) delete curriculumOverrides[faculte][origCode];
+    else curriculumOverrides[faculte][origCode] = previous;
+    console.error('❌ saveCurriculumOverride:', e.code || e.message);
+    showToast(e.code === 'permission-denied'
+      ? '❌ Sauvegarde refusée par Firestore — la règle pour la collection "settings" n\'a probablement pas encore été ajoutée.'
+      : '❌ Échec de la sauvegarde : ' + (e.message || e.code));
+    return false;
+  }
+}
+
+function applyCurriculumOverrides(cours, faculte){
+  const ov = curriculumOverrides[faculte];
+  if(!ov) return cours;
+  return cours
+    .filter(c => !(ov[c.code] && ov[c.code].removed))
+    .map(c => (ov[c.code] && !ov[c.code].removed)
+      ? Object.assign({}, c, { code: ov[c.code].code || c.code, nom: ov[c.code].nom || c.nom, origCode: c.code })
+      : c);
+}
+
+function getCours(faculte, semNum, noteBase, studentId){
+  const liste = coursParFaculte[faculte] || coursDefault;
+  const idx = Math.max(0, Math.min(semNum - 1, liste.length - 1));
+  const cours = liste[idx] || liste[0];
+  // Toutes les notes démarrent à 0 ("pas encore noté") — seul l'admin,
+  // en entrant une note manuellement (customNotes), fait apparaître une
+  // vraie note. Aucune note fictive/aléatoire n'est générée.
+  const withNotes = cours.map((c) => ({ ...c, note: 0 }));
+  return applyCurriculumOverrides(withNotes, faculte);
+}
+
+// Toutes les matières d'une faculté, tous semestres confondus — utilisé pour
+// permettre à l'admin d'ajouter une matière hors du semestre actuel (ex: cours
+// pris en session avancée / rattrapage).
+function getAllCoursForFaculte(faculte){
+  const liste = coursParFaculte[faculte] || coursDefault;
+  const vus = {};
+  const flat = [];
+  liste.forEach(sem => sem.forEach(c => {
+    if(!vus[c.code]){ vus[c.code] = true; flat.push(c); }
+  }));
+  return flat;
+}
+
+function togglePassField(inputId, checkbox){
+  const input = document.getElementById(inputId);
+  input.type = checkbox.checked ? 'text' : 'password';
+}
+
+
+let currentEmail = '';
+let inscPhotoData = '';
+
+// ══════════════════════════════════
+// NAVIGATION ÉTAPES LOGIN / FORMULAIRE
+// ══════════════════════════════════
+function hideAllLoginSteps(){
+  ['step0','step1','stepFormulaire','step2login','step2create','stepForgotVerify','stepForgot']
+    .forEach(id => { const el = document.getElementById(id); if(el) el.style.display = 'none'; });
+}
+
+function showStep0(){
+  hideAllLoginSteps();
+  document.getElementById('step0').style.display = 'block';
+  document.getElementById('loginError1').classList.remove('show');
+  document.getElementById('loginSubtitle').textContent = 'Connectez-vous pour accéder à votre espace';
+}
+
+function showStep1(){
+  hideAllLoginSteps();
+  document.getElementById('step1').style.display = 'block';
+}
+
+function showFormulaire(){
+  hideAllLoginSteps();
+  document.getElementById('stepFormulaire').style.display = 'block';
+  document.getElementById('loginSubtitle').textContent = 'Créez votre dossier étudiant';
+}
+
+// ══════════════════════════════════
+// ANNÉE SELON FACULTÉ (durée du programme)
+// ══════════════════════════════════
+function getDureeFaculte(faculte){
+  return 5;
+}
+
+function updateNewStudentAnneeOptions(){
+  const faculte = document.getElementById('newStudentFaculte').value;
+  const select  = document.getElementById('newStudentAnnee');
+  const duree   = getDureeFaculte(faculte);
+  let opts = '';
+  for(let a = 1; a <= duree; a++){
+    opts += `<option value="${a}">${a}ème année</option>`;
+  }
+  select.innerHTML = opts;
+}
+
+function updateAnneeOptions(){
+  const faculte = document.getElementById('inscFaculte').value;
+  const select  = document.getElementById('inscAnnee');
+  if(!faculte){
+    select.innerHTML = '<option value="">Choisir la filière d\'abord</option>';
+    return;
+  }
+  const duree = getDureeFaculte(faculte);
+  let opts = '<option value="">— Sélectionnez —</option>';
+  for(let a = 1; a <= duree; a++){
+    opts += `<option value="${a}">${a}ère/ème année</option>`;
+  }
+  select.innerHTML = opts;
+}
+
+// ══════════════════════════════════
+// PHOTO D'INSCRIPTION
+// ══════════════════════════════════
+function previewInscPhoto(e){
+  const file = e.target.files[0];
+  if(!file) return;
+  const label = document.getElementById('inscPhotoLabel');
+  label.textContent = file.name;
+  const r = new FileReader();
+  r.onload = ev => {
+    inscPhotoData = ev.target.result;
+    document.getElementById('inscPhotoImg').src = inscPhotoData;
+    document.getElementById('inscPhotoPreview').style.display = 'block';
+  };
+  r.readAsDataURL(file);
+}
+
+// ══════════════════════════════════
+// SOUMISSION DU FORMULAIRE D'INSCRIPTION
+// ══════════════════════════════════
+async function submitInscription(){
+  const err = document.getElementById('inscError');
+  err.classList.remove('show');
+  err.textContent = '';
+
+  // ── Vérification honeypot anti-bot ──
+  // Un humain ne voit ni ne remplit jamais ce champ invisible. S'il est
+  // rempli, c'est presque certainement un bot — on rejette silencieusement
+  // (fausse réussite) pour ne pas révéler la présence du piège.
+  const honeypot = document.getElementById('inscWebsite');
+  if(honeypot && honeypot.value.trim() !== ''){
+    console.warn('🍯 Honeypot déclenché — soumission bloquée silencieusement');
+    showToast('✅ Inscription réussie !');
+    return;
+  }
+
+  const get = id => document.getElementById(id).value.trim();
+
+  const codeInscription = get('inscCode');
+  if(codeInscription !== ENROLLMENT_CODE){
+    err.textContent = '❌ Code d\'inscription invalide. Contactez l\'administration.';
+    err.classList.add('show');
+    return;
+  }
+
+  const nom          = get('inscNom');
+  const prenom       = get('inscPrenom');
+  const sexe         = get('inscSexe');
+  const dob          = get('inscDob');
+  const cin          = get('inscCIN');
+  const groupeSanguin = get('inscGroupeSanguin');
+  const adresse      = get('inscAdresse');
+  const tel          = get('inscTel');
+  const email        = get('inscEmail').toLowerCase();
+  const faculte      = get('inscFaculte');
+  const annee        = parseInt(get('inscAnnee'));
+  const dateInteg    = get('inscDateInteg');
+  const urgNom       = get('inscUrgNom');
+  const urgLien      = get('inscUrgLien');
+  const urgTel       = get('inscUrgTel');
+  const urgAdresse   = get('inscUrgAdresse');
+  const mdp          = get('inscMdp');
+  const question     = get('inscQuestion');
+  const reponse      = get('inscReponse');
+
+  // ── Validation champs obligatoires
+  if(!nom || !prenom){ err.textContent = '❌ Le nom et le prénom sont obligatoires.'; err.classList.add('show'); return; }
+  if(!sexe){ err.textContent = '❌ Veuillez sélectionner le sexe.'; err.classList.add('show'); return; }
+  if(!dob){ err.textContent = '❌ La date de naissance est obligatoire.'; err.classList.add('show'); return; }
+  if(!inscPhotoData){ err.textContent = '❌ Veuillez ajouter une photo d\'identité.'; err.classList.add('show'); return; }
+  if(!adresse){ err.textContent = '❌ L\'adresse complète est obligatoire.'; err.classList.add('show'); return; }
+  if(!tel){ err.textContent = '❌ Le téléphone est obligatoire.'; err.classList.add('show'); return; }
+  if(!email || !email.includes('@')){ err.textContent = '❌ Veuillez entrer un email valide.'; err.classList.add('show'); return; }
+  if(!faculte){ err.textContent = '❌ Veuillez choisir une faculté / filière.'; err.classList.add('show'); return; }
+  if(!annee){ err.textContent = '❌ Veuillez choisir votre année.'; err.classList.add('show'); return; }
+  if(!dateInteg){ err.textContent = '❌ La date d\'intégration est obligatoire.'; err.classList.add('show'); return; }
+  if(!urgNom || !urgLien || !urgTel){ err.textContent = '❌ Les informations du contact d\'urgence sont obligatoires.'; err.classList.add('show'); return; }
+  if(!mdp || mdp.length < 6){ err.textContent = '❌ Mot de passe trop court (min. 6 caractères).'; err.classList.add('show'); return; }
+  if(!question || !reponse){ err.textContent = '❌ Veuillez choisir et répondre à une question secrète.'; err.classList.add('show'); return; }
+
+  // ── Email déjà utilisé ?
+  if(students.some(s => s.email.toLowerCase() === email)){
+    err.textContent = '❌ Cet email est déjà utilisé par un autre compte.';
+    err.classList.add('show');
+    return;
+  }
+
+  // ── Créer le compte Firebase Auth
+  const result = await firebaseRegister(email, mdp);
+  if(!result.success && result.code !== 'auth/email-already-in-use'){
+    err.textContent = '❌ ' + firebaseErrorMessage(result.code);
+    err.classList.add('show');
+    return;
+  }
+
+  // ── Créer l'étudiant localement
+  const nextNum = await getNextStudentNumber();
+  const id = `UGOC-2024-${String(nextNum).padStart(4,'0')}`;
+  const newStudent = {
+    id, prenom, nom, faculte, annee, note: 0, status: 'alert', email,
+    photo: `https://i.pravatar.cc/150?img=${(nextNum % 70) + 1}`,
+    customPhoto: inscPhotoData,
+    sexe, dob, cin, groupeSanguin, adresse, tel, dateInteg,
+    contactUrgence: { nom: urgNom, lien: urgLien, tel: urgTel, adresse: urgAdresse },
+    secretQuestion: question,
+    secretAnswer: reponse.toLowerCase()
+  };
+  students.unshift(newStudent);
+
+  // ── Compresser la photo AVANT de sauvegarder (pour tout inclure dans une seule écriture "create")
+  let photoCompressed = null;
+  if(inscPhotoData){
+    try { photoCompressed = await compressImage(inscPhotoData, 300, 300, 0.7); }
+    catch(e){ console.error('❌ Erreur compression photo à l\'inscription:', e); }
+  }
+
+  // ── Sauvegarder dans Firestore — UNE SEULE écriture (= "create", autorisée pour l'étudiant)
+  const firestorePayload = {
+    id, prenom, nom, faculte, annee, email, sexe, dob, cin, groupeSanguin, adresse, tel, dateInteg,
+    contactUrgence: newStudent.contactUrgence,
+    secretQuestion: question,
+    secretAnswer: reponse.toLowerCase(),
+    note: 0, status: 'alert',
+    customNotes: {}
+  };
+  if(photoCompressed) firestorePayload.photo = photoCompressed;
+
+  await saveStudentData(id, firestorePayload);
+  if(photoCompressed) newStudent.photo = photoCompressed;
+
+  currentUser = { email, role: 'etudiant', student: newStudent };
+  showToast(`✅ Inscription réussie ! Bienvenue, ${prenom}.`);
+  launchApp();
+}
+
+function goBackStep1(){
+  document.getElementById('step1').style.display = 'block';
+  document.getElementById('step2create').style.display = 'none';
+  document.getElementById('step2login').style.display = 'none';
+  document.getElementById('loginError1').classList.remove('show');
+  document.getElementById('loginSubtitle').textContent = 'Connectez-vous pour accéder à votre espace';
+}
+
+let forgotPasswordSending = false;
+async function goToForgotPassword(){
+  if(!currentEmail || forgotPasswordSending) return;
+  forgotPasswordSending = true;
+
+  const actionCodeSettings = { url: window.location.href };
+  try {
+    try {
+      await auth.sendPasswordResetEmail(currentEmail, actionCodeSettings);
+    } catch(inner){
+      if(inner.code === 'auth/unauthorized-continue-uri' || inner.code === 'auth/invalid-continue-uri'){
+        // Domaine non autorisé (ex: test en file://) — renvoyer sans URL de retour
+        await auth.sendPasswordResetEmail(currentEmail);
+      } else {
+        throw inner;
+      }
+    }
+    showToast('📧 Vérifiez votre boîte mail (et le dossier Spam) pour le lien de réinitialisation.');
+  } catch(e){
+    console.warn('sendPasswordResetEmail:', e.code);
+    if(e.code === 'auth/too-many-requests'){
+      showToast('⏳ Trop de tentatives. Réessayez dans quelques minutes.');
+    } else if(e.code === 'auth/invalid-email'){
+      showToast('❌ Adresse email invalide.');
+    } else {
+      // On ne révèle jamais si l'email existe ou non (anti-énumération)
+      showToast('📧 Si un compte existe avec cet email, un lien de réinitialisation vient d\'être envoyé.');
+    }
+  }
+
+  setTimeout(() => { forgotPasswordSending = false; }, 15000); // évite le spam de clics/emails
+}
+
+function checkEmail(){
+  const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+  const err   = document.getElementById('loginError1');
+  err.classList.remove('show');
+  if(!email){ err.classList.add('show'); return; }
+
+  const localStudent = students.find(s => s.email.toLowerCase() === email);
+  currentEmail = email;
+  document.getElementById('step1').style.display = 'none';
+
+  if(localStudent){
+    // Étudiant de la démo locale (250 générés) — probablement sans compte
+    // Firebase Auth réel pour l'instant → étape "créer un mot de passe"
+    document.getElementById('loginSubtitle').textContent = `Bienvenue, ${localStudent.prenom} 👋`;
+    document.getElementById('step2create').style.display = 'block';
+  } else {
+    // Email inconnu localement (session fraîche) — c'est probablement un
+    // étudiant réel déjà inscrit. On tente directement la connexion :
+    // Firebase Auth vérifiera le mot de passe et affichera une erreur claire
+    // si le compte n'existe pas ou si le mot de passe est incorrect.
+    document.getElementById('loginSubtitle').textContent = 'Bienvenue ! 👋';
+    document.getElementById('step2login').style.display = 'block';
+  }
+}
+
+async function createPassword(){
+  const np  = document.getElementById('newPassword').value;
+  const cp  = document.getElementById('confirmPassword').value;
+  const sq  = document.getElementById('secretQuestion').value;
+  const sa  = document.getElementById('secretAnswer').value.trim();
+  const err = document.getElementById('loginError2');
+  err.classList.remove('show');
+
+  if(!np || np.length < 6){ err.textContent = '❌ Mot de passe trop court (min. 6 caractères).'; err.classList.add('show'); return; }
+  if(np !== cp){ err.textContent = '❌ Les mots de passe ne correspondent pas.'; err.classList.add('show'); return; }
+  if(!sq){ err.textContent = '❌ Veuillez choisir une question secrète.'; err.classList.add('show'); return; }
+  if(!sa){ err.textContent = '❌ Veuillez répondre à la question secrète.'; err.classList.add('show'); return; }
+
+  const student = students.find(s => s.email.toLowerCase() === currentEmail);
+  if(!student){ err.textContent = '❌ Compte introuvable.'; err.classList.add('show'); return; }
+
+  // Créer le compte Firebase Auth (mdp géré par Firebase — hashé automatiquement)
+  const result = await firebaseRegister(currentEmail, np);
+  if(!result.success){
+    if(result.code === 'auth/email-already-in-use'){
+      // Compte Firebase existe déjà — mise à jour mdp seulement
+    } else {
+      err.textContent = '❌ ' + firebaseErrorMessage(result.code);
+      err.classList.add('show');
+      return;
+    }
+  }
+
+  // Sauvegarder question secrète dans Firestore (pas le mdp — Firebase le gère)
+  student.secretQuestion = sq;
+  student.secretAnswer   = sa.toLowerCase();
+  await saveStudentData(student.id, {
+    id: student.id,
+    prenom: student.prenom,
+    nom: student.nom,
+    email: student.email,
+    faculte: student.faculte,
+    annee: student.annee,
+    secretQuestion: sq,
+    secretAnswer: sa.toLowerCase()
+  });
+
+  currentUser = { email: currentEmail, role:'etudiant', student };
+  showToast('✅ Compte créé avec succès!');
+  launchApp();
+}
+
+async function doLogin(){
+  const pass = document.getElementById('loginPassword').value;
+  const err  = document.getElementById('loginError3');
+  err.classList.remove('show');
+
+  // Authentification 100% via Firebase Auth (le mot de passe n'est JAMAIS
+  // comparé dans le code source ; Firebase vérifie le mot de passe chiffré
+  // sur ses serveurs)
+  const result = await firebaseLogin(currentEmail, pass);
+  if(!result.success){
+    err.classList.add('show');
+    return;
+  }
+
+  // Déterminer le rôle SANS jamais coder l'email admin en dur dans le JS —
+  // on vérifie simplement si un document "admins/{monEmail}" existe pour moi
+  let isAdmin = false;
+  try {
+    const adminDoc = await db.collection('admins').doc(currentEmail).get();
+    isAdmin = adminDoc.exists;
+  } catch(e){ console.warn('Vérification admin:', e.code); }
+
+  if(isAdmin){
+    currentUser = { email: currentEmail, role:'admin' };
+    launchApp();
+    return;
+  }
+
+  // Étudiant — Firebase Auth (mdp hashé par Google)
+  let student = students.find(s => s.email.toLowerCase() === currentEmail);
+
+  // Récupérer les données depuis Firestore (maintenant authentifié, la lecture est autorisée)
+  const firestoreData = await getStudentByEmail(currentEmail);
+
+  if(!student && firestoreData){
+    // Étudiant réel non présent dans le tableau démo local (session fraîche) —
+    // reconstruire son profil directement depuis Firestore
+    student = Object.assign({
+      note: 0, status: 'alert',
+      photo: `https://i.pravatar.cc/150?img=${Math.floor(Math.random()*70)+1}`
+    }, firestoreData);
+    students.unshift(student);
+  }
+
+  if(!student){
+    // L'authentification Firebase a réussi (mot de passe correct), mais
+    // aucun profil Firestore n'existe pour ce compte — on en crée un minimal
+    // automatiquement plutôt que de bloquer l'accès d'un utilisateur légitime.
+    console.warn('⚠️ Compte authentifié mais aucun profil trouvé — création d\'un profil minimal pour', currentEmail);
+    const nextNum = await getNextStudentNumber();
+    const newId = `UGOC-2024-${String(nextNum).padStart(4,'0')}`;
+    student = {
+      id: newId, prenom: '—', nom: '—', faculte: facultes[0], annee: 1,
+      note: 0, status: 'alert', email: currentEmail,
+      photo: `https://i.pravatar.cc/150?img=${Math.floor(Math.random()*70)+1}`
+    };
+    await saveStudentData(newId, {
+      id: newId, prenom: student.prenom, nom: student.nom, faculte: student.faculte,
+      annee: student.annee, email: currentEmail, note: 0, status: 'alert', customNotes: {}
+    });
+    students.unshift(student);
+    showToast('ℹ️ Profil créé — veuillez compléter vos informations.');
+  }
+
+  if(firestoreData){
+    student.secretQuestion = firestoreData.secretQuestion;
+    student.secretAnswer   = firestoreData.secretAnswer;
+    if(firestoreData.customNotes) student.customNotes = firestoreData.customNotes;
+    if(firestoreData.extraCourses) student.extraCourses = firestoreData.extraCourses;
+    if(firestoreData.note !== undefined && firestoreData.note !== null) student.note = firestoreData.note;
+    if(firestoreData.status) student.status = firestoreData.status;
+    if(firestoreData.photo || firestoreData.photoURL) student.photo = firestoreData.photo || firestoreData.photoURL;
+  }
+
+  currentUser = { email: currentEmail, role:'etudiant', student };
+  launchApp();
+}
+
+async function launchApp(){
+  document.getElementById('loginPage').style.display = 'none';
+  document.getElementById('appPage').style.display   = 'block';
+  document.getElementById('headerEmail').textContent = currentUser.email;
+  document.getElementById('headerRole').textContent  = currentUser.role === 'admin' ? 'Admin' : 'Étudiant';
+
+  // Charger les corrections de curriculum (cours renommés/renumérotés ou
+  // rendus indisponibles par l'admin) — un seul document, lu une fois,
+  // partagé par tout le monde (admin ET étudiants, en lecture seule pour eux).
+  await loadCurriculumOverrides();
+
+  // Synchroniser avec Firestore maintenant que l'utilisateur est authentifié.
+  // IMPORTANT : un étudiant ne peut PAS faire une "list query" sur toute la
+  // collection (les Firestore Rules l'interdisent — permission-denied),
+  // seul l'admin le peut. Un étudiant doit utiliser une requête filtrée
+  // (where email == ...) qui, elle, respecte les Rules.
+  if(currentUser.role === 'admin'){
+    await syncStudentsFromFirestore();
+    showAdminList();
+  } else {
+    const fresh = await getStudentByEmail(currentUser.email);
+    if(fresh){
+      const idx = students.findIndex(s => s.id === fresh.id);
+      if(idx >= 0){
+        Object.assign(students[idx], fresh);
+        currentUser.student = students[idx];
+      } else {
+        students.unshift(Object.assign({ note: 0, status: 'alert' }, fresh));
+        currentUser.student = students[0];
+      }
+    }
+    showProfile(currentUser.student);
+  }
+}
+
+async function doLogout(){
+  await firebaseLogout();
+  currentUser = null;
+  currentEmail = '';
+  document.getElementById('appPage').style.display   = 'none';
+  document.getElementById('loginPage').style.display = 'flex';
+  document.getElementById('loginEmail').value = '';
+  document.getElementById('step1').style.display = 'block';
+  document.getElementById('step2create').style.display = 'none';
+  document.getElementById('step2login').style.display = 'none';
+  document.getElementById('loginSubtitle').textContent = 'Connectez-vous pour accéder à votre espace';
+  document.getElementById('adminView').style.display  = 'none';
+  document.getElementById('profileView').style.display = 'none';
+}
+
+// ══════════════════════════════════
+// ADMIN — LISTE
+// ══════════════════════════════════
+function showAdminTab(tab){
+  var dashView  = document.getElementById('dashboardView');
+  var listeView = document.getElementById('listeView');
+  var tabDash   = document.getElementById('tabDashboard');
+  var tabList   = document.getElementById('tabListe');
+
+  if(tab === 'dashboard'){
+    dashView.style.display  = 'block';
+    listeView.style.display = 'none';
+    tabDash.style.background = 'rgba(255,255,255,0.15)';
+    tabDash.style.color = 'white';
+    tabDash.style.borderBottom = '2px solid white';
+    tabList.style.background = 'none';
+    tabList.style.color = 'rgba(255,255,255,0.6)';
+    tabList.style.borderBottom = '2px solid transparent';
+    updateDashboard();
+  } else {
+    dashView.style.display  = 'none';
+    listeView.style.display = 'block';
+    tabDash.style.background = 'none';
+    tabDash.style.color = 'rgba(255,255,255,0.6)';
+    tabDash.style.borderBottom = '2px solid transparent';
+    tabList.style.background = 'rgba(255,255,255,0.15)';
+    tabList.style.color = 'white';
+    tabList.style.borderBottom = '2px solid white';
+    renderList();
+  }
+}
+
+function showAdminList(){
+  document.getElementById('adminView').style.display   = 'block';
+  document.getElementById('profileView').style.display = 'none';
+  window.scrollTo(0,0);
+  renderList();
+  updateDashboard();
+
+  document.getElementById('searchInput').oninput  = renderList;
+  document.getElementById('facultyFilter').onchange = renderList;
+  document.getElementById('statusFilter').onchange  = renderList;
+}
+
+function updateDashboard(){
+  var total   = students.length;
+  var ok      = students.filter(function(s){ return s.status==='ok'; }).length;
+  var alert   = students.filter(function(s){ return s.status==='alert'; }).length;
+  var danger  = students.filter(function(s){ return s.status==='danger'; }).length;
+  var notes   = students.filter(function(s){ return s.note > 0; }).map(function(s){ return s.note; });
+  var moy     = notes.length > 0 ? (notes.reduce(function(a,b){ return a+b; },0)/notes.length).toFixed(1) : '—';
+  var taux    = total > 0 ? Math.round((ok/total)*100) : 0;
+  var pctOk     = total > 0 ? Math.round((ok/total)*100)     : 0;
+  var pctAlert  = total > 0 ? Math.round((alert/total)*100)  : 0;
+  var pctDanger = total > 0 ? Math.round((danger/total)*100) : 0;
+
+  document.getElementById('dash-total').textContent  = total;
+  document.getElementById('dash-ok').textContent     = pctOk + '%';
+  document.getElementById('dash-alert').textContent  = pctAlert + '%';
+  document.getElementById('dash-danger').textContent = pctDanger + '%';
+  document.getElementById('dash-moy').textContent    = moy + (moy!=='—'?'/100':'');
+  document.getElementById('dash-taux').textContent   = taux + '%';
+
+  // ── Graphique statut (barres CSS)
+  var chartStatut = document.getElementById('dash-chart-statut');
+  if(chartStatut){
+    var items = [
+      { label:'Validé (65-100)',            val:ok,     color:'#3da86d', pct: pctOk },
+      { label:'Reprise (50-64)',            val:alert,  color:'#e8932a', pct: pctAlert },
+      { label:'Reprendre le cours (0-49)',  val:danger, color:'#F5A623', pct: pctDanger },
+    ];
+    chartStatut.innerHTML = items.map(function(item){
+      return '<div style="margin-bottom:16px;">'
+        +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">'
+        +'<span style="font-size:13px;font-weight:600;color:#3d1f00;">'+item.label+'</span>'
+        +'<span style="font-size:13px;font-weight:700;color:'+item.color+';">'+item.pct+'%</span>'
+        +'</div>'
+        +'<div style="background:#f0f0f0;border-radius:20px;height:10px;overflow:hidden;">'
+        +'<div style="height:100%;width:'+item.pct+'%;background:'+item.color+';border-radius:20px;transition:width 0.8s ease;"></div>'
+        +'</div>'
+        +'</div>';
+    }).join('');
+  }
+
+  // ── Graphique par faculté (top 6)
+  var chartFac = document.getElementById('dash-chart-faculte');
+  if(chartFac){
+    var facCount = {};
+    students.forEach(function(s){
+      facCount[s.faculte] = (facCount[s.faculte]||0)+1;
+    });
+    var sorted = Object.keys(facCount).sort(function(a,b){ return facCount[b]-facCount[a]; }).slice(0,6);
+    var maxVal = sorted.length > 0 ? facCount[sorted[0]] : 1;
+    chartFac.innerHTML = sorted.map(function(fac){
+      var count = facCount[fac];
+      var pct = Math.round(count/maxVal*100);
+      return '<div style="margin-bottom:12px;">'
+        +'<div style="display:flex;justify-content:space-between;margin-bottom:5px;">'
+        +'<span style="font-size:12px;font-weight:600;color:#3d1f00;">'+fac+'</span>'
+        +'<span style="font-size:12px;color:#9a8a8a;">'+count+' étudiant'+(count>1?'s':'')+'</span>'
+        +'</div>'
+        +'<div style="background:#f0f0f0;border-radius:20px;height:8px;overflow:hidden;">'
+        +'<div style="height:100%;width:'+pct+'%;background:linear-gradient(90deg,#cc6600,#F5A623);border-radius:20px;transition:width 0.8s ease;"></div>'
+        +'</div>'
+        +'</div>';
+    }).join('');
+  }
+
+  // ── Liste alertes récentes (5 derniers)
+  var dashAlertes = document.getElementById('dash-alertes');
+  if(dashAlertes){
+    var alertStudents = students.filter(function(s){ return s.status==='danger'||s.status==='alert'; }).slice(0,5);
+    if(alertStudents.length === 0){
+      dashAlertes.innerHTML = '<p style="font-size:13px;color:#9a8a8a;text-align:center;padding:20px 0;">✅ Aucun étudiant en alerte</p>';
+    } else {
+      dashAlertes.innerHTML = alertStudents.map(function(s){
+        var color = s.status==='danger'?'#F5A623':'#e8932a';
+        var label = s.status==='danger'?'Reprendre le cours':'Reprise';
+        return '<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #fff5f5;" onclick="showProfile(students.find(function(x){return x.id===\''+esc(s.id)+'\';}))" style="cursor:pointer;">'
+          +'<div>'
+          +'<div style="font-size:13px;font-weight:600;color:#3d1f00;">'+esc(s.prenom)+' '+esc(s.nom)+'</div>'
+          +'<div style="font-size:11px;color:#9a8a8a;">'+esc(s.faculte)+' · '+s.annee+'ème année</div>'
+          +'</div>'
+          +'<span style="background:'+color+';color:white;font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;">'+label+'</span>'
+          +'</div>';
+      }).join('');
+    }
+  }
+}
+
+function renderList(){
+  const q   = document.getElementById('searchInput').value.toLowerCase();
+  const fac = document.getElementById('facultyFilter').value;
+  const sta = document.getElementById('statusFilter').value;
+
+  const filtered = students.filter(s=>{
+    const name = `${s.prenom} ${s.nom}`.toLowerCase();
+    return (!q || name.includes(q) || s.id.toLowerCase().includes(q))
+        && (!fac || s.faculte===fac)
+        && (!sta || s.status===sta);
+  });
+
+  document.getElementById('showCount').textContent  = filtered.length;
+  document.getElementById('alertCount').textContent = students.filter(s=>s.status==='alert'||s.status==='danger').length;
+  document.getElementById('okCount').textContent    = students.filter(s=>s.status==='ok').length;
+
+  const grid = document.getElementById('studentGrid');
+  if(!filtered.length){
+    grid.innerHTML = `<div class="empty"><div class="icon">🔍</div><p>Aucun étudiant trouvé.</p></div>`;
+    return;
+  }
+  grid.innerHTML = filtered.map((s,i)=>`
+    <div class="card" style="animation-delay:${Math.min(i,30)*0.03}s" onclick="showProfile(students.find(x=>x.id==='${esc(s.id)}'))">
+      <div class="card-photo">
+        <img src="${s.photo}" alt="${esc(s.prenom)} ${esc(s.nom)}" onerror="this.src='https://i.pravatar.cc/150?img=1'"/>
+        <div class="status-dot ${s.status}"></div>
+      </div>
+      <div class="card-name">${esc(s.prenom)} ${esc(s.nom)}</div>
+      <div class="card-id">${esc(s.id)}</div>
+      <div class="card-faculty">Fac. ${esc(s.faculte)}</div>
+      <div class="card-stats">
+        <div class="cstat"><div class="cl">Année</div><div class="cv">${s.annee}ème</div></div>
+        <div class="cstat"><div class="cl">Moyenne</div><div class="cv ${s.note>=65?'ok':'danger'}">${s.note}/100</div></div>
+      </div>
+      <button class="card-btn">Voir le profil →</button>
+    </div>
+  `).join('');
+}
+
+// ══════════════════════════════════
+// AJOUTER UN ÉTUDIANT
+// ══════════════════════════════════
+function openAddStudentModal(){
+  document.getElementById('newStudentPrenom').value = '';
+  document.getElementById('newStudentNom').value = '';
+  document.getElementById('newStudentEmail').value = '';
+  document.getElementById('newStudentFaculte').value = 'Génie Informatique';
+  updateNewStudentAnneeOptions();
+  document.getElementById('newStudentAnnee').value = '1';
+  document.getElementById('addStudentError').style.display = 'none';
+  document.getElementById('addStudentOverlay').style.display = 'flex';
+}
+
+function closeAddStudentModal(){
+  document.getElementById('addStudentOverlay').style.display = 'none';
+}
+
+// ── Promotion en masse d'une année vers la suivante ──
+function openPromotionModal(){
+  document.getElementById('promoFaculte').value = '';
+  document.getElementById('promoAnnee').value = '1';
+  document.getElementById('promoError').style.display = 'none';
+  updatePromotionPreview();
+  document.getElementById('promotionOverlay').style.display = 'flex';
+}
+
+function closePromotionModal(){
+  document.getElementById('promotionOverlay').style.display = 'none';
+}
+
+function updatePromotionPreview(){
+  var faculte = document.getElementById('promoFaculte').value;
+  var annee = parseInt(document.getElementById('promoAnnee').value);
+  var matches = students.filter(function(s){
+    return s.annee === annee && (!faculte || s.faculte === faculte);
+  });
+  document.getElementById('promoCount').textContent =
+    matches.length === 0
+      ? 'Aucun étudiant trouvé pour ce critère.'
+      : matches.length+' étudiant(s) seront promu(s) de '+annee+'ère/ème vers '+(annee+1)+'ère/ème année.';
+}
+
+async function promoteStudents(){
+  var faculte = document.getElementById('promoFaculte').value;
+  var annee = parseInt(document.getElementById('promoAnnee').value);
+  var errEl = document.getElementById('promoError');
+  errEl.style.display = 'none';
+
+  var matches = students.filter(function(s){
+    return s.annee === annee && (!faculte || s.faculte === faculte);
+  });
+
+  if(matches.length === 0){
+    errEl.textContent = '❌ Aucun étudiant ne correspond à ce critère.';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  if(!confirm('Confirmer la promotion de '+matches.length+' étudiant(s) vers '+(annee+1)+'ère/ème année ?')) return;
+
+  await Promise.all(matches.map(function(s){
+    s.annee = annee + 1;
+    return saveStudentData(s.id, { annee: s.annee });
+  }));
+
+  await logAdminAction('promotion_annee', (faculte||'Toutes facultés')+' — '+matches.length+' étudiant(s): '+annee+' → '+(annee+1));
+
+  closePromotionModal();
+  renderList();
+  updateDashboard();
+  showToast('🎓 '+matches.length+' étudiant(s) promu(s) en '+(annee+1)+'ère/ème année !');
+}
+
+// ── Journal des actions admin sensibles (accountability) ──
+async function logAdminAction(action, details){
+  try {
+    await db.collection('journal').add({
+      action, details,
+      par: currentUser ? currentUser.email : 'inconnu',
+      horodatage: new Date().toISOString()
+    });
+  } catch(e){ console.warn('⚠️ Journal non enregistré:', e.code); }
+}
+
+async function exportAllData(){
+  showToast('⏳ Préparation de l\'export...');
+  try {
+    const snap = await db.collection('etudiants').get();
+    const data = snap.docs.map(d => d.data());
+    const json = JSON.stringify(data, null, 2);
+    const blob = new Blob([json], {type: 'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const dateStr = new Date().toISOString().slice(0,10);
+    a.href = url;
+    a.download = `ugoc-backup-etudiants-${dateStr}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast(`✅ Export réussi — ${data.length} étudiant(s).`);
+  } catch(e){
+    console.error('❌ Erreur export:', e.code, e.message);
+    showToast('❌ Échec de l\'export. Réessayez.');
+  }
+}
+
+async function submitNewStudent(){
+  const prenom  = document.getElementById('newStudentPrenom').value.trim();
+  const nom     = document.getElementById('newStudentNom').value.trim();
+  const email   = document.getElementById('newStudentEmail').value.trim().toLowerCase();
+  const faculte = document.getElementById('newStudentFaculte').value;
+  const annee   = parseInt(document.getElementById('newStudentAnnee').value);
+  const err     = document.getElementById('addStudentError');
+
+  err.style.display = 'none';
+
+  if(!prenom || !nom){ err.textContent = '❌ Le prénom et le nom sont obligatoires.'; err.style.display = 'block'; return; }
+  if(!email || !email.includes('@')){ err.textContent = '❌ Veuillez entrer un email valide.'; err.style.display = 'block'; return; }
+
+  // Vérifier que l'email n'existe pas déjà
+  if(students.some(s => s.email.toLowerCase() === email)){
+    err.textContent = '❌ Cet email est déjà utilisé par un autre compte.';
+    err.style.display = 'block';
+    return;
+  }
+
+  // Nouvel étudiant — pas encore de note, les cours sont générés automatiquement
+  // selon sa faculté et son année grâce à getCours()
+  const note = 0;
+  const status = 'alert'; // Statut neutre par défaut, sera mis à jour avec les vraies notes
+  const nextNum = await getNextStudentNumber();
+  const id = `UGOC-2024-${String(nextNum).padStart(4,'0')}`;
+
+  const newStudent = {
+    id, prenom, nom, faculte, annee, note, status, email,
+    photo: `https://i.pravatar.cc/150?img=${(nextNum % 70) + 1}`
+  };
+
+  students.unshift(newStudent);
+
+  // ── Sauvegarder immédiatement dans Firestore (sinon le profil n'existe
+  // qu'en mémoire locale et toute modification ultérieure peut échouer
+  // silencieusement, ex. si les règles de sécurité exigent un "update"
+  // plutôt qu'un "create" pour les écritures suivantes)
+  const saved = await saveStudentData(id, {
+    id, prenom, nom, faculte, annee, note, status, email,
+    photo: newStudent.photo
+  });
+
+  closeAddStudentModal();
+  if(saved){
+    showToast(`✅ ${prenom} ${nom} a été ajouté(e) avec succès! Ses cours en ${faculte} ont été générés automatiquement.`);
+  } else {
+    showToast(`⚠️ ${prenom} ${nom} a été ajouté(e) localement, mais la sauvegarde dans la base de données a échoué. Vérifiez votre connexion.`);
+  }
+  renderList();
+}
+
+// ══════════════════════════════════
+// PROFIL (admin = editable, étudiant = readonly)
+// ══════════════════════════════════
+function showProfile(s){
+  document.getElementById('adminView').style.display   = 'none';
+  document.getElementById('profileView').style.display = 'block';
+  window.scrollTo(0,0);
+
+  const isAdmin = currentUser && currentUser.role === 'admin';
+  const isOwnProfile = currentUser && currentUser.role === 'etudiant' && currentUser.student && currentUser.student.id === s.id;
+  const canEditInfo = isAdmin || isOwnProfile; // infos perso + photo
+  const canEditGrades = isAdmin;               // notes/statut — admin seulement
+  const canDelete = isAdmin;                    // suppression de compte — admin seulement
+
+  const nc = s.note>=65?'good':s.note>=50?'mid':'low';
+  const statusColor = s.status==='ok'?'#3da86d':s.status==='alert'?'#e8932a':'#F5A623';
+  const statusLabel = s.status==='ok'?'Validé':s.status==='alert'?'Reprise':'Reprendre le cours';
+
+  const field = (label, key, val, full=false) => `
+    <div class="field" ${full?'style="grid-column:1/-1"':''}>
+      <span class="field-label">${esc(label)}</span>
+      ${canEditInfo
+        ? `<input class="field-input" id="field_${esc(key)}" value="${val}"/>`
+        : `<div class="field-value ${key==='email'?'email':''}">${esc(val)}</div>`}
+    </div>`;
+
+  document.getElementById('profileContainer').innerHTML = `
+    ${isAdmin ? `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+      <button class="back-btn" style="margin-bottom:0;" onclick="showAdminList()">← Retour à la liste</button>
+      ${canDelete ? `<button onclick="deleteStudent('${s.id}')" style="background:#fff0f0;border:1px solid #ffcccc;color:var(--rouge-vif);padding:7px 14px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;">🗑️ Supprimer</button>` : ''}
+    </div>
+    ` : ''}
+    <h1 class="page-title">Mon Profil</h1>
+    <p class="breadcrumb">UGOC / <span>${esc(s.prenom)} ${esc(s.nom)}</span></p>
+    
+
+    <div class="profile-grid">
+      <div class="profile-left">
+        <div class="photo-card">
+          <div class="photo-wrapper">
+            <img id="studentPhoto" src="${s.customPhoto || s.photo}" alt="Photo de ${esc(s.prenom)} ${esc(s.nom)}" onerror="this.src='https://i.pravatar.cc/150?img=1'"/>
+            <div class="photo-badge">✓</div>
+          </div>
+          <div class="student-name">${esc(s.prenom)} ${esc(s.nom)}</div>
+          <div class="student-id">${esc(s.id)}</div>
+          <div class="faculty-tag">Fac. de ${esc(s.faculte)}</div>
+          <div class="profile-stats">
+            <div class="stat-item"><div class="stat-label">Année</div><div class="stat-value">${s.annee}ème</div></div>
+            <div class="stat-item"><div class="stat-label">Moyenne</div><div class="stat-value" style="color:${s.note>=65?'#3da86d':'#F5A623'}">${s.note}/100</div></div>
+            <div class="stat-item"><div class="stat-label">Crédits</div><div class="stat-value">84</div></div>
+            <div class="stat-item"><div class="stat-label">Statut</div><div class="stat-value" style="color:${statusColor};font-size:12px">${statusLabel}</div></div>
+          </div>
+          ${canEditInfo ? `
+            <button class="photo-upload-btn" onclick="document.getElementById('photoInput').click()">📷 Modifier la photo</button>
+            <input type="file" id="photoInput" accept="image/*" style="display:none" onchange="previewPhoto(event,'${s.id}')"/>
+          ` : ''}
+        </div>
+
+        <div class="status-card">
+          <h3>Statut académique</h3>
+          ${(function(){
+            var semActuel = s.annee*2;
+            var notes = s.customNotes || {};
+            var nbValide=0, nbReprise=0, nbReprendre=0, nbEnCours=0;
+            for(var sem=1; sem<=semActuel; sem++){
+              var cours = getCours(s.faculte, sem, s.note, s.id);
+              cours.forEach(function(c){
+                var n = notes[c.code] !== undefined ? notes[c.code] : c.note;
+                if(n <= 0) nbEnCours++;
+                else if(n >= 65) nbValide++;
+                else if(n >= 50) nbReprise++;
+                else nbReprendre++;
+              });
+            }
+            var lines = '';
+            lines += '<div class="status-item"><div class="dot green"></div><div>'+nbValide+' matière'+(nbValide!==1?'s':'')+' — <strong>Validé</strong></div></div>';
+            lines += '<div class="status-item"><div class="dot orange"></div><div>'+nbReprise+' matière'+(nbReprise!==1?'s':'')+' — <strong>Reprise</strong></div></div>';
+            lines += '<div class="status-item"><div class="dot red"></div><div>'+nbReprendre+' matière'+(nbReprendre!==1?'s':'')+' — <strong>Reprendre le cours</strong></div></div>';
+            if(nbEnCours > 0){
+              lines += '<div class="status-item"><div class="dot blue"></div><div>'+nbEnCours+' matière'+(nbEnCours!==1?'s':'')+' — <strong>En cours</strong></div></div>';
+            }
+            return lines;
+          })()}
+        </div>
+      </div>
+
+      <div class="profile-right">
+        <div class="info-card">
+          <div class="card-header">
+            <h2 class="card-title">Informations personnelles</h2>
+            ${canEditInfo ? `<button class="edit-btn" onclick="saveProfile('${s.id}')">💾 Sauvegarder</button>` : ''}
+          </div>
+          <div class="info-grid">
+            ${field('Prénom','prenom',esc(s.prenom))}
+            ${field('Nom','nom',esc(s.nom))}
+            ${field('Faculté','faculte',esc(s.faculte))}
+            ${field('Année','annee',s.annee+'ème année')}
+            ${field('Email','email',esc(s.email),true)}
+            ${field('ID Étudiant','id',esc(s.id))}
+            ${field('Téléphone','tel',esc(s.tel || '+509 ---- ----'))}
+            ${field('Sexe','sexe',esc(s.sexe || '—'))}
+            ${field('Date de naissance','dob',esc(s.dob || '—'))}
+            ${field('CIN','cin',esc(s.cin || '—'))}
+            ${field('Groupe sanguin','groupeSanguin',esc(s.groupeSanguin || '—'))}
+            ${field('Adresse','adresse',esc(s.adresse || '—'))}
+            ${field('Date d\'intégration','dateInteg',esc(s.dateInteg || '—'))}
+          </div>
+        </div>
+
+        <div class="info-card" style="margin-top:16px;">
+          <div class="card-header">
+            <h2 class="card-title">Contact d'urgence</h2>
+          </div>
+          <div class="info-grid">
+            ${field('Nom','urgNom',esc((s.contactUrgence && s.contactUrgence.nom) || '—'))}
+            ${field('Lien','urgLien',esc((s.contactUrgence && s.contactUrgence.lien) || '—'))}
+            ${field('Téléphone','urgTel',esc((s.contactUrgence && s.contactUrgence.tel) || '—'))}
+            ${field('Adresse','urgAdresse',esc((s.contactUrgence && s.contactUrgence.adresse) || '—'))}
+          </div>
+        </div>
+
+        <div class="subjects-card" id="subjectsCard"></div>
+
+        ${canEditInfo ? `<button class="save-btn" onclick="saveProfile('${esc(s.id)}')">💾 Sauvegarder les modifications</button>` : ''}
+      </div>
+    </div>
+  `;
+
+  // Rann matières yo apre innerHTML chaje
+  renderSubjects(s, canEditGrades);
+}
+
+async function deleteStudent(id){
+  const s = students.find(x => x.id === id);
+  const fullName = s ? `${s.prenom} ${s.nom}` : 'cet étudiant';
+  if(!confirm(`Êtes-vous sûr de vouloir supprimer ${fullName} ? Cette action est irréversible.`)) return;
+
+  const index = students.findIndex(x => x.id === id);
+  if(index === -1) return;
+
+  try {
+    await db.collection('etudiants').doc(id).delete();
+  } catch(e){
+    console.error('❌ Erreur suppression Firestore:', e.code, e.message);
+    showToast('❌ Échec de la suppression sur le serveur. Réessayez.');
+    return;
+  }
+
+  await logAdminAction('suppression_etudiant', `${fullName} (${id})`);
+
+  students.splice(index, 1);
+  showToast(`✅ ${fullName} a été supprimé(e).`);
+  showAdminList();
+}
+
+async function saveProfile(id){
+  const s = students.find(x=>x.id===id);
+  if(!s) return;
+  const get = key => { const el=document.getElementById('field_'+key); return el?el.value:null; };
+  if(get('prenom')) s.prenom = get('prenom');
+  if(get('nom'))    s.nom    = get('nom');
+  if(get('email'))  s.email  = get('email');
+  if(get('tel'))       s.tel       = get('tel');
+  if(get('sexe'))       s.sexe       = get('sexe');
+  if(get('dob'))        s.dob        = get('dob');
+  if(get('cin'))        s.cin        = get('cin');
+  if(get('groupeSanguin')) s.groupeSanguin = get('groupeSanguin');
+  if(get('adresse'))    s.adresse    = get('adresse');
+  if(get('dateInteg'))  s.dateInteg  = get('dateInteg');
+
+  s.contactUrgence = s.contactUrgence || {};
+  if(get('urgNom'))     s.contactUrgence.nom     = get('urgNom');
+  if(get('urgLien'))    s.contactUrgence.lien    = get('urgLien');
+  if(get('urgTel'))     s.contactUrgence.tel     = get('urgTel');
+  if(get('urgAdresse')) s.contactUrgence.adresse = get('urgAdresse');
+
+  // ── Sauvegarder automatiquement dans Firestore
+  const saved = await saveStudentData(s.id, {
+    id: s.id, prenom: s.prenom, nom: s.nom, email: s.email,
+    faculte: s.faculte, annee: s.annee,
+    tel: s.tel, sexe: s.sexe, dob: s.dob, cin: s.cin,
+    groupeSanguin: s.groupeSanguin,
+    adresse: s.adresse, dateInteg: s.dateInteg,
+    contactUrgence: s.contactUrgence
+  });
+
+  if(saved){
+    showToast('✅ Informations sauvegardées!');
+  } else {
+    showToast('❌ Échec de la sauvegarde — vérifiez votre connexion et réessayez.');
+  }
+}
+
+function previewPhoto(e, studentId){
+  const file = e.target.files[0]; if(!file) return;
+  const r = new FileReader();
+  r.onload = async ev => {
+    const dataUrl = ev.target.result;
+    document.getElementById('studentPhoto').src = dataUrl;
+    showToast('📷 Photo mise à jour avec succès!');
+
+    const s = students.find(x => x.id === studentId);
+    if(s) s.customPhoto = dataUrl;
+
+    // ── Sauvegarder la photo dans Firebase Storage
+    const url = await persistStudentPhoto(studentId, dataUrl);
+    if(url && s){
+      s.photo = url;
+      const imgEl = document.getElementById('studentPhoto');
+      if(imgEl) imgEl.src = url;
+    }
+  };
+  r.readAsDataURL(file);
+}
+
+function renderSubjects(s, editable){
+  var el = document.getElementById('subjectsCard');
+  if(!el) return;
+
+  // Initialiser notes personnalisées si pas encore fait
+  if(!s.customNotes) s.customNotes = {};
+
+  function getNoteValue(code, defaultNote){
+    return s.customNotes[code] !== undefined ? s.customNotes[code] : defaultNote;
+  }
+
+  function renderTable(cours, isEditable, faculte){
+    var isAdmin = currentUser && currentUser.role === 'admin';
+    var rows = cours.map(function(c){
+      var noteKey = c.origCode || c.code; // clé stable pour les notes, même si le cours a été renommé
+      var note = getNoteValue(noteKey, c.note);
+      var nc = note>=65?'good':note>=50?'mid':'low';
+      var badge = note>=65?'passe':note>=50?'reprendre':note>0?'recompose':'encours';
+      var label = note>=65?'Validé':note>=50?'Reprise':note>0?'Reprendre le cours':'En cours';
+      var noteStr = note>0 ? note+'/100' : '—/100';
+      var noteCell = isEditable
+        ? '<td><input type="number" min="0" max="100" value="'+(note>0?note:'')+'" placeholder="—" onchange="updateNote(\''+s.id+'\',\''+noteKey+'\',this.value)" style="width:54px;padding:4px 6px;border:1.5px solid rgba(245,166,35,0.3);border-radius:6px;font-size:13px;font-family:DM Sans,sans-serif;outline:none;text-align:center;" onfocus="this.style.borderColor=\'#F5A623\'" onblur="this.style.borderColor=\'rgba(245,166,35,0.3)\'"/></td>'
+        : '<td><span class="score '+nc+'" style="font-size:13px">'+noteStr+'</span></td>';
+      var canRemoveExtra = c.isExtra && isEditable && isAdmin && !(note>0);
+      var removeBtn = canRemoveExtra ? ' <span onclick="removeExtraCourse(\''+s.id+'\',\''+c.code+'\')" title="Retirer cette matière" style="color:#e05252;cursor:pointer;font-size:12px;margin-left:6px;">✕</span>' : '';
+      var nomEsc = esc(c.nom).replace(/'/g,"\\'");
+      var editBtn = (!c.isExtra && isAdmin && faculte) ? ' <span onclick="openEditCourse(\''+s.id+'\',\''+faculte+'\',\''+noteKey+'\',\''+esc(c.code)+'\',\''+nomEsc+'\')" title="Modifier le code/nom de ce cours" style="cursor:pointer;font-size:11px;margin-left:6px;">✏️</span>' : '';
+      var unavailBtn = (!c.isExtra && isAdmin && faculte) ? ' <span onclick="markCourseUnavailable(\''+s.id+'\',\''+faculte+'\',\''+noteKey+'\',\''+nomEsc+'\')" title="Ce cours n\'est plus disponible" style="cursor:pointer;font-size:11px;margin-left:4px;color:#e05252;">🚫</span>' : '';
+      var nomCell = c.nom + (c.isExtra ? ' <span style="font-size:10px;color:#F5A623;font-weight:700;">(ajoutée)</span>' : '') + removeBtn + editBtn + unavailBtn;
+      return '<tr id="courseRow_'+s.id+'_'+noteKey+'"><td style="font-size:11px;color:#9a8a8a">'+c.code+'</td><td style="font-size:13px">'+nomCell+'</td>'+noteCell+'<td><span class="badge '+badge+'">'+label+'</span></td></tr>';
+    }).join('');
+    return '<table><thead><tr><th>Code</th><th>Matière</th><th>Note</th><th>Statut</th></tr></thead><tbody>'+rows+'</tbody></table>';
+  }
+
+  function buildAddCourseUI(){
+    if(!(currentUser && currentUser.role === 'admin')) return '';
+    var semActuel = s.annee*2;
+    var courants = getCours(s.faculte, semActuel, s.note, s.id).map(function(c){ return c.code; })
+      .concat((s.extraCourses||[]).map(function(c){ return c.code; }));
+    var options = getAllCoursForFaculte(s.faculte)
+      .filter(function(c){ return courants.indexOf(c.code) === -1; })
+      .map(function(c){ return '<option value="'+c.code+'">'+c.code+' — '+c.nom+'</option>'; })
+      .join('');
+    if(!options) return '';
+    return '<div style="margin-top:16px;padding-top:14px;border-top:1px dashed rgba(245,166,35,0.3);display:flex;gap:8px;align-items:center;flex-wrap:wrap;">'
+      +'<select id="addCourseSelect_'+s.id+'" style="flex:1;min-width:200px;padding:8px;border-radius:8px;border:1.5px solid rgba(245,166,35,0.3);font-family:\'DM Sans\',sans-serif;font-size:13px;">'
+      +'<option value="">＋ Ajouter une matière (session avancée, rattrapage...)</option>'
+      +options
+      +'</select>'
+      +'<button onclick="addExtraCourse(\''+s.id+'\')" style="padding:8px 14px;background:#F5A623;color:white;border:none;border-radius:8px;font-weight:700;font-size:13px;cursor:pointer;white-space:nowrap;">+ Ajouter</button>'
+      +'</div>';
+  }
+
+  function buildHistory(){
+    var html = '<p style="font-size:12px;color:#9a8a8a;margin-bottom:16px;">Tous les semestres complétés</p>';
+    var semActuel = s.annee*2; // dernier semestre de l'année en cours = semestre actuel
+    for(var sem=1; sem<semActuel; sem++){
+      var anneeSem = Math.ceil(sem/2);
+      var isCurrent = false; // l'historique ne montre que les semestres déjà complétés
+      var cours = getCours(s.faculte, sem, s.note, s.id);
+      var valid = cours.filter(function(c){ var n=getNoteValue(c.code,c.note); return n>0; });
+      var moy = valid.length>0?(valid.reduce(function(acc,c){return acc+getNoteValue(c.code,c.note);},0)/valid.length).toFixed(1):'—';
+      var moyColor = parseFloat(moy)>=65?'#3da86d':parseFloat(moy)>=50?'#e8932a':'#F5A623';
+      var bg = '#fff5f5';
+      var bord = '#ddd';
+      html += '<div style="margin-bottom:20px;"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;padding:8px 12px;background:'+bg+';border-radius:10px;border-left:3px solid '+bord+';">';
+      html += '<span style="font-weight:700;font-size:13px">Semestre '+sem+' — Année '+anneeSem+'</span>';
+      html += '<span style="font-size:13px;font-weight:700;color:'+moyColor+'">Moy: '+moy+(moy!=='—'?'/100':'')+'</span></div>';
+      html += renderTable(cours, false)+'</div>';
+    }
+    return html;
+  }
+
+  var isEditable = editable || (currentUser && currentUser.role === 'admin');
+  var semActuel = s.annee*2;
+  el.innerHTML =
+    '<div style="display:flex;gap:0;margin-bottom:18px;border-bottom:2px solid #fff5f5;">'
+    +'<button onclick="switchTabEl(\'curTab\',\'hisTab\',this)" class="tab-btn" style="padding:10px 20px;border:none;background:none;font-family:\'DM Sans\',sans-serif;font-size:13px;font-weight:700;color:#F5A623;cursor:pointer;border-bottom:3px solid #F5A623;margin-bottom:-2px;">📋 Semestre actuel</button>'
+    +'<button onclick="switchTabEl(\'hisTab\',\'curTab\',this)" class="tab-btn" style="padding:10px 20px;border:none;background:none;font-family:\'DM Sans\',sans-serif;font-size:13px;font-weight:600;color:#9a8a8a;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;">📚 Historique</button>'
+    +'</div>'
+    +(isEditable ? '<p style="font-size:11px;color:#F5A623;margin-bottom:12px;">✏️ Cliquez sur une note pour la modifier</p>' : '')
+    +'<div id="curTab"><p style="font-size:12px;color:#9a8a8a;margin-bottom:12px;">Semestre '+semActuel+' — Année '+s.annee+'</p>'
+    +renderTable(getCours(s.faculte, semActuel, s.note, s.id).concat((s.extraCourses||[]).map(function(c){ return Object.assign({}, c, {note:0, isExtra:true}); })), isEditable, s.faculte)
+    +buildAddCourseUI()
+    +'</div>'
+    +'<div id="hisTab" style="display:none">'+buildHistory()+'</div>';
+}
+
+async function updateNote(studentId, courseCode, newValue){
+  var s = students.find(function(x){ return x.id === studentId; });
+  if(!s) return;
+
+  if(!s.customNotes) s.customNotes = {};
+
+  // Si note la deja antre — bloke
+  if(s.customNotes[courseCode] !== undefined && s.customNotes[courseCode] > 0){
+    showToast('⚠️ Cette note a déjà été enregistrée — modification non autorisée.');
+    renderSubjects(s, true);
+    return;
+  }
+
+  var val = parseFloat(newValue);
+  if(isNaN(val) || val < 0) val = 0;
+  if(val > 100) val = 100;
+
+  if(val === 0) return; // Pa sove 0 kòm note antre
+
+  s.customNotes[courseCode] = val;
+
+  // Mete ajou mwayèn jeneral
+  var allNotes = Object.values(s.customNotes).filter(function(n){ return n > 0; });
+  if(allNotes.length > 0){
+    s.note = Math.round(allNotes.reduce(function(a,b){ return a+b; }, 0) / allNotes.length * 10) / 10;
+    s.status = s.note >= 65 ? 'ok' : s.note >= 50 ? 'alert' : 'danger';
+  }
+
+  // ── Sauvegarder automatiquement les notes dans Firestore
+  await saveStudentData(s.id, {
+    id: s.id,
+    customNotes: s.customNotes,
+    note: s.note,
+    status: s.status
+  });
+
+  await logAdminAction('note_entree', `${s.prenom} ${s.nom} (${s.id}) — ${courseCode}: ${val}/100`);
+
+  showToast('✅ Note enregistrée — ne peut plus être modifiée.');
+  renderSubjects(s, true);
+}
+
+// ── Admin choisit une matière spécifique à ajouter pour un étudiant
+// (ex: cours pris en session avancée / rattrapage, hors du semestre normal)
+async function addExtraCourse(studentId){
+  var s = students.find(function(x){ return x.id === studentId; });
+  if(!s) return;
+
+  var sel = document.getElementById('addCourseSelect_'+studentId);
+  if(!sel || !sel.value){
+    showToast('⚠️ Choisissez une matière d\'abord.');
+    return;
+  }
+
+  var code = sel.value;
+  var course = getAllCoursForFaculte(s.faculte).find(function(c){ return c.code === code; });
+  if(!course) return;
+
+  if(!s.extraCourses) s.extraCourses = [];
+  if(s.extraCourses.some(function(c){ return c.code === code; })){
+    showToast('⚠️ Cette matière est déjà ajoutée.');
+    return;
+  }
+
+  s.extraCourses.push({ code: course.code, nom: course.nom });
+
+  await saveStudentData(s.id, { extraCourses: s.extraCourses });
+  await logAdminAction('matiere_ajoutee', `${s.prenom} ${s.nom} (${s.id}) — ${course.code}: ${course.nom}`);
+
+  showToast('✅ Matière ajoutée — vous pouvez maintenant entrer la note.');
+  renderSubjects(s, true);
+}
+
+// ── Admin retire une matière ajoutée par erreur (seulement si aucune note n'a été entrée)
+async function removeExtraCourse(studentId, courseCode){
+  var s = students.find(function(x){ return x.id === studentId; });
+  if(!s || !s.extraCourses) return;
+
+  if(s.customNotes && s.customNotes[courseCode] > 0){
+    showToast('⚠️ Impossible de retirer — une note a déjà été enregistrée pour cette matière.');
+    return;
+  }
+
+  var idx = s.extraCourses.findIndex(function(c){ return c.code === courseCode; });
+  if(idx < 0) return;
+  s.extraCourses.splice(idx, 1);
+
+  await saveStudentData(s.id, { extraCourses: s.extraCourses });
+  await logAdminAction('matiere_retiree', `${s.prenom} ${s.nom} (${s.id}) — ${courseCode}`);
+
+  showToast('🗑️ Matière retirée.');
+  renderSubjects(s, true);
+}
+
+// ── Admin modifie le code et/ou le nom d'un cours du programme de base
+// (ex: le code du ministère a changé, ou le nom officiel a été corrigé).
+// Le changement s'applique à TOUTE la faculté, pas seulement à cet étudiant —
+// les notes déjà enregistrées restent liées au cours via son code d'origine,
+// donc rien n'est perdu.
+async function openEditCourse(studentId, faculte, origCode, currentCode, currentNom){
+  var nom = prompt('Nom du cours :', currentNom);
+  if(nom === null) return; // annulé
+  nom = nom.trim();
+
+  var code = prompt('Code du cours :', currentCode);
+  if(code === null) return; // annulé
+  code = code.trim();
+
+  if(!nom || !code){
+    showToast('⚠️ Le nom et le code sont obligatoires.');
+    return;
+  }
+
+  var ok = await saveCurriculumOverride(faculte, origCode, { code: code, nom: nom, removed: false });
+  if(!ok) return; // le message d'erreur a déjà été affiché par saveCurriculumOverride
+
+  await logAdminAction('cours_modifie', `${faculte} — ${currentCode} → ${code} : ${nom}`);
+  showToast('✅ Cours mis à jour pour toute la faculté ' + faculte + '.');
+
+  var s = students.find(function(x){ return x.id === studentId; });
+  if(s) renderSubjects(s, true);
+}
+
+// ── Admin marque un cours du programme de base comme n'étant plus
+// disponible (ex: cours retiré du curriculum). Il disparaît de l'affichage
+// pour tous les étudiants de cette faculté, mais les notes déjà entrées
+// restent conservées dans Firestore (rien n'est supprimé, juste caché).
+async function markCourseUnavailable(studentId, faculte, origCode, nom){
+  if(!confirm('Rendre "' + nom + '" indisponible pour tous les étudiants de la faculté "' + faculte + '" ?\n\n(Les notes déjà enregistrées pour ce cours ne seront pas perdues.)')) return;
+
+  var ok = await saveCurriculumOverride(faculte, origCode, { removed: true });
+  if(!ok) return; // le message d'erreur a déjà été affiché par saveCurriculumOverride
+
+  await logAdminAction('cours_indisponible', `${faculte} — ${nom} rendu indisponible`);
+  showToast('✅ "' + nom + '" est maintenant indisponible pour la faculté ' + faculte + '.');
+
+  var s = students.find(function(x){ return x.id === studentId; });
+  if(s) renderSubjects(s, true);
+}
+
+function showToast(msg){
+  var t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 3000);
+}
+
+function switchTabEl(showId, hideId, btn){
+  document.getElementById(showId).style.display = 'block';
+  document.getElementById(hideId).style.display = 'none';
+  var tabs = btn.parentElement.querySelectorAll('.tab-btn');
+  tabs.forEach(function(t){
+    t.style.color = '#9a8a8a';
+    t.style.borderBottom = '3px solid transparent';
+    t.style.fontWeight = '600';
+  });
+  btn.style.color = '#F5A623';
+  btn.style.borderBottom = '3px solid #F5A623';
+  btn.style.fontWeight = '700';
+}
+
+</script>
+</body>
+</html>
