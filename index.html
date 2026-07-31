@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://www.google.com https://www.gstatic.com/recaptcha/ https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.googleapis.com https://*.google.com https://firestore.googleapis.com https://identitytoolkit.googleapis.com wss://*.firebaseio.com; frame-src https://www.google.com; object-src 'none'; base-uri 'self';"/>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://www.google.com https://www.gstatic.com/recaptcha/; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.googleapis.com https://*.google.com https://firestore.googleapis.com https://identitytoolkit.googleapis.com wss://*.firebaseio.com; frame-src https://www.google.com; object-src 'none'; base-uri 'self';"/>
   <title>UGOC CONNECT — Conseil des étudiants de UGOCC</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <style>
@@ -1746,7 +1746,9 @@ async function doLogin(){
     student.secretQuestion = firestoreData.secretQuestion;
     student.secretAnswer   = firestoreData.secretAnswer;
     if(firestoreData.customNotes) student.customNotes = firestoreData.customNotes;
+    if(firestoreData.noteEditCount) student.noteEditCount = firestoreData.noteEditCount;
     if(firestoreData.extraCourses) student.extraCourses = firestoreData.extraCourses;
+    if(firestoreData.coursRetires) student.coursRetires = firestoreData.coursRetires;
     if(firestoreData.note !== undefined && firestoreData.note !== null) student.note = firestoreData.note;
     if(firestoreData.status) student.status = firestoreData.status;
     if(firestoreData.photo || firestoreData.photoURL) student.photo = firestoreData.photo || firestoreData.photoURL;
@@ -2371,18 +2373,47 @@ function renderSubjects(s, editable){
       var badge = note>=65?'passe':note>=50?'reprendre':note>0?'recompose':'encours';
       var label = note>=65?'Validé':note>=50?'Reprise':note>0?'Reprendre le cours':'En cours';
       var noteStr = note>0 ? note+'/100' : '—/100';
-      var noteCell = isEditable
-        ? '<td><input type="number" min="0" max="100" value="'+(note>0?note:'')+'" placeholder="—" onchange="updateNote(\''+s.id+'\',\''+noteKey+'\',this.value)" style="width:54px;padding:4px 6px;border:1.5px solid rgba(245,166,35,0.3);border-radius:6px;font-size:13px;font-family:DM Sans,sans-serif;outline:none;text-align:center;" onfocus="this.style.borderColor=\'#F5A623\'" onblur="this.style.borderColor=\'rgba(245,166,35,0.3)\'"/></td>'
-        : '<td><span class="score '+nc+'" style="font-size:13px">'+noteStr+'</span></td>';
-      var canRemoveExtra = c.isExtra && isEditable && isAdmin && !(note>0);
+      var editCount = (s.noteEditCount && s.noteEditCount[noteKey]) || 0;
+      var editsLeft = 3 - editCount;
+      var noteCell;
+      if(isEditable && editsLeft > 0){
+        noteCell = '<td><input type="number" min="0" max="100" value="'+(note>0?note:'')+'" placeholder="—" onchange="updateNote(\''+s.id+'\',\''+noteKey+'\',this.value)" style="width:54px;padding:4px 6px;border:1.5px solid rgba(245,166,35,0.3);border-radius:6px;font-size:13px;font-family:DM Sans,sans-serif;outline:none;text-align:center;" onfocus="this.style.borderColor=\'#F5A623\'" onblur="this.style.borderColor=\'rgba(245,166,35,0.3)\'"/>'
+          +'<div style="font-size:9px;color:#b3862c;margin-top:2px;">'+editsLeft+' modif. restante(s)</div></td>';
+      } else if(isEditable){
+        noteCell = '<td><span class="score '+nc+'" style="font-size:13px">'+noteStr+'</span> <span title="Limite de 3 modifications atteinte" style="font-size:11px;">🔒</span></td>';
+      } else {
+        noteCell = '<td><span class="score '+nc+'" style="font-size:13px">'+noteStr+'</span></td>';
+      }
+      var canRemoveExtra = c.isExtra && isAdmin;
       var removeBtn = canRemoveExtra ? ' <span onclick="removeExtraCourse(\''+s.id+'\',\''+c.code+'\')" title="Retirer cette matière" style="color:#e05252;cursor:pointer;font-size:12px;margin-left:6px;">✕</span>' : '';
       var nomEsc = esc(c.nom).replace(/'/g,"\\'");
       var editBtn = (!c.isExtra && isAdmin && faculte) ? ' <span onclick="openEditCourse(\''+s.id+'\',\''+faculte+'\',\''+noteKey+'\',\''+esc(c.code)+'\',\''+nomEsc+'\')" title="Modifier le code/nom de ce cours" style="cursor:pointer;font-size:11px;margin-left:6px;">✏️</span>' : '';
-      var unavailBtn = (!c.isExtra && isAdmin && faculte) ? ' <span onclick="markCourseUnavailable(\''+s.id+'\',\''+faculte+'\',\''+noteKey+'\',\''+nomEsc+'\')" title="Ce cours n\'est plus disponible" style="cursor:pointer;font-size:11px;margin-left:4px;color:#e05252;">🚫</span>' : '';
-      var nomCell = c.nom + (c.isExtra ? ' <span style="font-size:10px;color:#F5A623;font-weight:700;">(ajoutée)</span>' : '') + removeBtn + editBtn + unavailBtn;
+      var editExtraBtn = (c.isExtra && isAdmin) ? ' <span onclick="editExtraCourse(\''+s.id+'\',\''+c.code+'\')" title="Modifier le code/nom de cette matière" style="cursor:pointer;font-size:11px;margin-left:6px;">✏️</span>' : '';
+      var unavailBtn = (!c.isExtra && isAdmin && faculte) ? ' <span onclick="markCourseUnavailable(\''+s.id+'\',\''+faculte+'\',\''+noteKey+'\',\''+nomEsc+'\')" title="Retirer ce cours du programme pour TOUTE la faculté" style="cursor:pointer;font-size:11px;margin-left:4px;color:#e05252;">🚫</span>' : '';
+      var retireBtn = (!c.isExtra && isAdmin) ? ' <span onclick="retireCourseForStudent(\''+s.id+'\',\''+noteKey+'\',\''+nomEsc+'\')" title="Cet étudiant n\'a pas suivi ce cours (retrait pour LUI SEULEMENT, réversible)" style="cursor:pointer;font-size:11px;margin-left:4px;color:#b3862c;">👤➖</span>' : '';
+      var nomCell = c.nom + (c.isExtra ? ' <span style="font-size:10px;color:#F5A623;font-weight:700;">('+(c.custom?'personnalisée':'ajoutée')+')</span>' : '') + editExtraBtn + removeBtn + editBtn + unavailBtn + retireBtn;
       return '<tr id="courseRow_'+s.id+'_'+noteKey+'"><td style="font-size:11px;color:#9a8a8a">'+c.code+'</td><td style="font-size:13px">'+nomCell+'</td>'+noteCell+'<td><span class="badge '+badge+'">'+label+'</span></td></tr>';
     }).join('');
     return '<table><thead><tr><th>Code</th><th>Matière</th><th>Note</th><th>Statut</th></tr></thead><tbody>'+rows+'</tbody></table>';
+  }
+
+  function buildRetiredCoursesUI(){
+    if(!(currentUser && currentUser.role === 'admin')) return '';
+    var retires = s.coursRetires || [];
+    if(retires.length === 0) return '';
+    var semActuel = s.annee*2;
+    var allCours = getCours(s.faculte, semActuel, s.note, s.id);
+    var items = retires.map(function(code){
+      var c = allCours.find(function(x){ return (x.origCode || x.code) === code; });
+      var nom = c ? c.nom : code;
+      return '<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;background:#faf6f0;border-radius:8px;margin-bottom:6px;font-size:12.5px;">'
+        +'<span>'+esc(nom)+' <span style="color:#9a8a8a;font-size:10px;">('+esc(code)+')</span></span>'
+        +'<span onclick="restoreCourseForStudent(\''+s.id+'\',\''+code+'\')" style="cursor:pointer;color:#3da86d;font-weight:700;font-size:12px;">↺ Restaurer</span>'
+        +'</div>';
+    }).join('');
+    return '<div style="margin-top:14px;">'
+      +'<p style="font-size:11px;color:#9a8a8a;margin-bottom:6px;font-weight:600;">Matières retirées pour cet étudiant (non suivies) :</p>'
+      +items+'</div>';
   }
 
   function buildAddCourseUI(){
@@ -2394,13 +2425,16 @@ function renderSubjects(s, editable){
       .filter(function(c){ return courants.indexOf(c.code) === -1; })
       .map(function(c){ return '<option value="'+c.code+'">'+c.code+' — '+c.nom+'</option>'; })
       .join('');
-    if(!options) return '';
-    return '<div style="margin-top:16px;padding-top:14px;border-top:1px dashed rgba(245,166,35,0.3);display:flex;gap:8px;align-items:center;flex-wrap:wrap;">'
-      +'<select id="addCourseSelect_'+s.id+'" style="flex:1;min-width:200px;padding:8px;border-radius:8px;border:1.5px solid rgba(245,166,35,0.3);font-family:\'DM Sans\',sans-serif;font-size:13px;">'
+    return '<div style="margin-top:16px;padding-top:14px;border-top:1px dashed rgba(245,166,35,0.3);display:flex;flex-direction:column;gap:8px;">'
+      +'<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">'
+      +'<select id="addCourseSelect_'+s.id+'" onchange="toggleCustomCourseInput(\''+s.id+'\')" style="flex:1;min-width:200px;padding:8px;border-radius:8px;border:1.5px solid rgba(245,166,35,0.3);font-family:\'DM Sans\',sans-serif;font-size:13px;">'
       +'<option value="">＋ Ajouter une matière (session avancée, rattrapage...)</option>'
       +options
+      +'<option value="__custom__">✎ Autre matière (non listée) — saisir manuellement</option>'
       +'</select>'
       +'<button onclick="addExtraCourse(\''+s.id+'\')" style="padding:8px 14px;background:#F5A623;color:white;border:none;border-radius:8px;font-weight:700;font-size:13px;cursor:pointer;white-space:nowrap;">+ Ajouter</button>'
+      +'</div>'
+      +'<input type="text" id="customCourseName_'+s.id+'" placeholder="Nom de la nouvelle matière..." style="display:none;padding:8px;border-radius:8px;border:1.5px solid rgba(245,166,35,0.3);font-family:\'DM Sans\',sans-serif;font-size:13px;"/>'
       +'</div>';
   }
 
@@ -2433,7 +2467,12 @@ function renderSubjects(s, editable){
     +'</div>'
     +(isEditable ? '<p style="font-size:11px;color:#F5A623;margin-bottom:12px;">✏️ Cliquez sur une note pour la modifier</p>' : '')
     +'<div id="curTab"><p style="font-size:12px;color:#9a8a8a;margin-bottom:12px;">Semestre '+semActuel+' — Année '+s.annee+'</p>'
-    +renderTable(getCours(s.faculte, semActuel, s.note, s.id).concat((s.extraCourses||[]).map(function(c){ return Object.assign({}, c, {note:0, isExtra:true}); })), isEditable, s.faculte)
+    +renderTable(
+        getCours(s.faculte, semActuel, s.note, s.id)
+          .filter(function(c){ return (s.coursRetires||[]).indexOf(c.origCode||c.code) === -1; })
+          .concat((s.extraCourses||[]).map(function(c){ return Object.assign({}, c, {note:0, isExtra:true}); })),
+        isEditable, s.faculte)
+    +buildRetiredCoursesUI()
     +buildAddCourseUI()
     +'</div>'
     +'<div id="hisTab" style="display:none">'+buildHistory()+'</div>';
@@ -2444,10 +2483,13 @@ async function updateNote(studentId, courseCode, newValue){
   if(!s) return;
 
   if(!s.customNotes) s.customNotes = {};
+  if(!s.noteEditCount) s.noteEditCount = {};
 
-  // Si note la deja antre — bloke
-  if(s.customNotes[courseCode] !== undefined && s.customNotes[courseCode] > 0){
-    showToast('⚠️ Cette note a déjà été enregistrée — modification non autorisée.');
+  // Limite : une note peut être modifiée au maximum 3 fois (la saisie
+  // initiale compte comme la 1ère modification). Au-delà, elle est verrouillée.
+  var count = s.noteEditCount[courseCode] || 0;
+  if(count >= 3){
+    showToast('⚠️ Limite de 3 modifications atteinte pour cette note — elle est verrouillée.');
     renderSubjects(s, true);
     return;
   }
@@ -2459,6 +2501,7 @@ async function updateNote(studentId, courseCode, newValue){
   if(val === 0) return; // Pa sove 0 kòm note antre
 
   s.customNotes[courseCode] = val;
+  s.noteEditCount[courseCode] = count + 1;
 
   // Mete ajou mwayèn jeneral
   var allNotes = Object.values(s.customNotes).filter(function(n){ return n > 0; });
@@ -2471,18 +2514,30 @@ async function updateNote(studentId, courseCode, newValue){
   await saveStudentData(s.id, {
     id: s.id,
     customNotes: s.customNotes,
+    noteEditCount: s.noteEditCount,
     note: s.note,
     status: s.status
   });
 
-  await logAdminAction('note_entree', `${s.prenom} ${s.nom} (${s.id}) — ${courseCode}: ${val}/100`);
+  await logAdminAction('note_entree', `${s.prenom} ${s.nom} (${s.id}) — ${courseCode}: ${val}/100 (modification ${count+1}/3)`);
 
-  showToast('✅ Note enregistrée — ne peut plus être modifiée.');
+  var restant = 3 - (count + 1);
+  showToast(restant > 0
+    ? '✅ Note enregistrée — '+restant+' modification(s) restante(s).'
+    : '✅ Note enregistrée — limite de 3 modifications atteinte, elle est maintenant verrouillée.');
   renderSubjects(s, true);
 }
 
 // ── Admin choisit une matière spécifique à ajouter pour un étudiant
 // (ex: cours pris en session avancée / rattrapage, hors du semestre normal)
+// ── Affiche/cache le champ de saisie libre selon le choix dans le menu ──
+function toggleCustomCourseInput(studentId){
+  var sel = document.getElementById('addCourseSelect_'+studentId);
+  var input = document.getElementById('customCourseName_'+studentId);
+  if(!sel || !input) return;
+  input.style.display = sel.value === '__custom__' ? 'block' : 'none';
+}
+
 async function addExtraCourse(studentId){
   var s = students.find(function(x){ return x.id === studentId; });
   if(!s) return;
@@ -2493,9 +2548,25 @@ async function addExtraCourse(studentId){
     return;
   }
 
-  var code = sel.value;
-  var course = getAllCoursForFaculte(s.faculte).find(function(c){ return c.code === code; });
-  if(!course) return;
+  var code, nom, isCustom = false;
+
+  if(sel.value === '__custom__'){
+    var input = document.getElementById('customCourseName_'+studentId);
+    var nomSaisi = input ? input.value.trim() : '';
+    if(!nomSaisi){
+      showToast('⚠️ Écrivez le nom de la matière.');
+      return;
+    }
+    nom = esc(nomSaisi);
+    isCustom = true;
+    // Générer un code unique (propre à cet étudiant) pour cette matière personnalisée
+    code = 'PERSO-' + Date.now().toString(36).toUpperCase();
+  } else {
+    code = sel.value;
+    var course = getAllCoursForFaculte(s.faculte).find(function(c){ return c.code === code; });
+    if(!course) return;
+    nom = course.nom;
+  }
 
   if(!s.extraCourses) s.extraCourses = [];
   if(s.extraCourses.some(function(c){ return c.code === code; })){
@@ -2503,33 +2574,75 @@ async function addExtraCourse(studentId){
     return;
   }
 
-  s.extraCourses.push({ code: course.code, nom: course.nom });
+  // Ajouté UNIQUEMENT sur le dossier de CET étudiant — n'affecte ni le
+  // catalogue de la faculté, ni les autres étudiants.
+  s.extraCourses.push({ code: code, nom: nom, custom: isCustom });
 
   await saveStudentData(s.id, { extraCourses: s.extraCourses });
-  await logAdminAction('matiere_ajoutee', `${s.prenom} ${s.nom} (${s.id}) — ${course.code}: ${course.nom}`);
+  await logAdminAction('matiere_ajoutee'+(isCustom?'_personnalisee':''), `${s.prenom} ${s.nom} (${s.id}) — ${code}: ${nom}`);
 
   showToast('✅ Matière ajoutée — vous pouvez maintenant entrer la note.');
   renderSubjects(s, true);
 }
 
-// ── Admin retire une matière ajoutée par erreur (seulement si aucune note n'a été entrée)
+// ── Admin retire une matière ajoutée (session avancée/rattrapage) —
+// possible à tout moment, comme pour les cours du programme de base,
+// qui peuvent être modifiés/retirés même après qu'une note ait été entrée.
 async function removeExtraCourse(studentId, courseCode){
   var s = students.find(function(x){ return x.id === studentId; });
   if(!s || !s.extraCourses) return;
 
-  if(s.customNotes && s.customNotes[courseCode] > 0){
-    showToast('⚠️ Impossible de retirer — une note a déjà été enregistrée pour cette matière.');
-    return;
-  }
+  if(!confirm('Retirer cette matière ? La note associée (si elle existe) sera aussi supprimée.')) return;
 
   var idx = s.extraCourses.findIndex(function(c){ return c.code === courseCode; });
   if(idx < 0) return;
   s.extraCourses.splice(idx, 1);
 
-  await saveStudentData(s.id, { extraCourses: s.extraCourses });
+  // Retirer aussi la note associée, pour ne pas laisser une donnée orpheline
+  if(s.customNotes && s.customNotes[courseCode] !== undefined){
+    delete s.customNotes[courseCode];
+  }
+
+  await saveStudentData(s.id, { extraCourses: s.extraCourses, customNotes: s.customNotes });
   await logAdminAction('matiere_retiree', `${s.prenom} ${s.nom} (${s.id}) — ${courseCode}`);
 
   showToast('🗑️ Matière retirée.');
+  renderSubjects(s, true);
+}
+
+// ── Admin modifie le code/nom d'une matière ajoutée (session avancée)
+async function editExtraCourse(studentId, courseCode){
+  var s = students.find(function(x){ return x.id === studentId; });
+  if(!s || !s.extraCourses) return;
+  var c = s.extraCourses.find(function(x){ return x.code === courseCode; });
+  if(!c) return;
+
+  var nom = prompt('Nom de la matière :', c.nom);
+  if(nom === null) return;
+  nom = nom.trim();
+
+  var code = prompt('Code de la matière :', c.code);
+  if(code === null) return;
+  code = code.trim();
+
+  if(!nom || !code){
+    showToast('⚠️ Le nom et le code sont obligatoires.');
+    return;
+  }
+
+  // Si le code change, transférer aussi la note existante vers le nouveau code
+  if(code !== courseCode && s.customNotes && s.customNotes[courseCode] !== undefined){
+    s.customNotes[code] = s.customNotes[courseCode];
+    delete s.customNotes[courseCode];
+  }
+
+  c.code = code;
+  c.nom  = nom;
+
+  await saveStudentData(s.id, { extraCourses: s.extraCourses, customNotes: s.customNotes });
+  await logAdminAction('matiere_modifiee', `${s.prenom} ${s.nom} (${s.id}) — ${courseCode} → ${code}: ${nom}`);
+
+  showToast('✅ Matière mise à jour.');
   renderSubjects(s, true);
 }
 
@@ -2577,6 +2690,42 @@ async function markCourseUnavailable(studentId, faculte, origCode, nom){
 
   var s = students.find(function(x){ return x.id === studentId; });
   if(s) renderSubjects(s, true);
+}
+
+// ── Admin indique qu'un étudiant SPÉCIFIQUE n'a pas suivi un cours du
+// programme de base. Contrairement à markCourseUnavailable (qui retire le
+// cours pour TOUTE la faculté), ceci ne touche que le dossier de cet
+// étudiant. Le cours reste disponible pour tous les autres étudiants, et
+// l'action est réversible via "Restaurer".
+async function retireCourseForStudent(studentId, courseCode, nom){
+  var s = students.find(function(x){ return x.id === studentId; });
+  if(!s) return;
+
+  if(!confirm('Indiquer que cet étudiant n\'a pas suivi "' + nom + '" ?\n\nCe cours reste disponible pour tous les autres étudiants — seul le dossier de cet étudiant est modifié. Vous pourrez le restaurer à tout moment.')) return;
+
+  if(!s.coursRetires) s.coursRetires = [];
+  if(s.coursRetires.indexOf(courseCode) === -1) s.coursRetires.push(courseCode);
+
+  await saveStudentData(s.id, { coursRetires: s.coursRetires });
+  await logAdminAction('cours_retire_etudiant', `${s.prenom} ${s.nom} (${s.id}) — ${nom} (${courseCode}) retiré (non suivi par cet étudiant)`);
+
+  showToast('✅ Matière retirée pour cet étudiant — réversible à tout moment.');
+  renderSubjects(s, true);
+}
+
+async function restoreCourseForStudent(studentId, courseCode){
+  var s = students.find(function(x){ return x.id === studentId; });
+  if(!s || !s.coursRetires) return;
+
+  var idx = s.coursRetires.indexOf(courseCode);
+  if(idx < 0) return;
+  s.coursRetires.splice(idx, 1);
+
+  await saveStudentData(s.id, { coursRetires: s.coursRetires });
+  await logAdminAction('cours_restaure_etudiant', `${s.prenom} ${s.nom} (${s.id}) — ${courseCode} restauré`);
+
+  showToast('✅ Matière restaurée pour cet étudiant.');
+  renderSubjects(s, true);
 }
 
 function showToast(msg){
